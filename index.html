@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CATUR RAJA</title>
 <style>
-*{box-sizing:border-box}body{background:#111;color:#fff;font-family:Arial;text-align:center;margin:0;padding:10px}
-h1{color:#ffcc00;margin:5px}#info{background:#222;padding:10px;border-radius:12px;margin:10px}
-#board{width:340px;max-width:95vw;margin:10px auto;display:grid;grid-template-columns:repeat(8,1fr);border:4px solid #ffcc00;border-radius:6px;overflow:hidden}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;position:relative}
-.w{background:#f0d9b5;color:#000}.b{background:#b58863;color:#000}
-.sel{background:#f7e74a!important}
-.dot::after{content:"";width:14px;height:14px;background:#22c55e;border-radius:50%;position:absolute;box-shadow:0 0 0 3px rgba(255,255,255,.7)}
-.eat::after{content:"";position:absolute;inset:3px;border:4px solid #ef4444;border-radius:50%}
-button{background:#ffcc00;border:0;padding:11px 16px;border-radius:10px;font-weight:bold;margin:5px}
+body{background:#111;color:#fff;font-family:Arial;text-align:center;padding:10px}
+h1{color:#ffcc00}
+#info{background:#222;padding:10px;border-radius:10px}
+#board{width:320px;margin:10px auto;border:4px solid #ffcc00}
+.row{display:flex}
+.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
+.w{background:#f0d9b5}.b{background:#b58863}
+.sel{background:yellow!important}
+.dot{background:#22c55e!important}
+.eat{background:#ef4444!important}
+button{background:#ffcc00;border:0;padding:10px 15px;border-radius:10px;font-weight:bold}
 </style></head>
 <body>
-<h1>♞ CATUR RAJA ♞</h1>
-<div id="info"><b id="turn">Giliran: Putih ⚪</b><br><span id="msg">Klik bidak, liat titik hijau nya!</span></div>
+<h1>CATUR RAJA</h1>
+<div id="info"><b id="turn">Giliran: Putih</b><br><span id="msg">Klik bidak, liat kotak hijau!</span></div>
 <div id="board"></div>
-<button onclick="location.reload()">🔄 Ulangi Game</button>
-<p style="opacity:.7;font-size:13px">🟢 = Bisa jalan &nbsp; 🔴 = Bisa makan</p>
+<button onclick="location.reload()">Ulangi Game</button>
+<p>Hijau = Bisa Jalan, Merah = Bisa Makan</p>
 <script>
-let board=[
+var board=[
 ["♜","♞","♝","♛","♚","♝","♞","♜"],
 ["♟","♟","♟","♟","♟","♟","♟","♟"],
 ["","","","","","","",""],
@@ -28,14 +30,74 @@ let board=[
 ["","","","","","","",""],
 ["♙","♙","♙","♙","♙","♙","♙","♙"],
 ["♖","♘","♗","♕","♔","♗","♘","♖"]];
-let turn='w',sel=null,moves=[];
-let W="♔♕♖♗♘♙",B="♚♛♜♝♞♟";
-function isW(p){return W.includes(p)} function isB(p){return B.includes(p)}
+var turn="w"; var selR=-1; var selC=-1; var moves=[];
+var W="♔♕♖♗♘♙"; var B="♚♛♜♝♞♟";
+function isW(p){return W.indexOf(p)>=0}
+function isB(p){return B.indexOf(p)>=0}
 function inside(r,c){return r>=0&&r<8&&c>=0&&c<8}
 function getMoves(r,c){
- let p=board[r][c],m=[],me=turn;
- let add=(rr,cc)=>{if(!inside(rr,cc))return false;let t=board[rr][cc];
-  if(t==''){m.push([rr,cc]);return true}
-  if((me=='w'&&isB(t))||(me=='b'&&isW(t))){m.push([rr,cc]);return false}
-  return false}
- let slide=(dirs)=>{for(let [dr,dc] of dirs){let rr=r+dr,cc=c+dc;while(inside(rr,cc)){let t=board[rr][cc];if(t==''){m.push(
+var p=board[r][c]; var m=[]; var me=turn;
+function add(rr,cc){
+if(!inside(rr,cc))return;
+var t=board[rr][cc];
+if(t==""){m.push([rr,cc]);}
+else if((me=="w"&&isB(t))||(me=="b"&&isW(t))){m.push([rr,cc]);}
+}
+function slide(dirs){
+for(var i=0;i<dirs.length;i++){
+var dr=dirs[i][0]; var dc=dirs[i][1];
+var rr=r+dr; var cc=c+dc;
+while(inside(rr,cc)){
+var t=board[rr][cc];
+if(t==""){m.push([rr,cc]);}
+else{if((me=="w"&&isB(t))||(me=="b"&&isW(t)))m.push([rr,cc]); break;}
+rr+=dr; cc+=dc;
+}
+}
+}
+if(p=="♙"||p=="♟"){
+var dir=(p=="♙"?-1:1); var start=(p=="♙"?6:1);
+if(inside(r+dir,c)&&board[r+dir][c]==""){m.push([r+dir,c]); if(r==start&&board[r+dir*2][c]=="")m.push([r+dir*2,c]);}
+for(var k=-1;k<=1;k+=2){var rr2=r+dir; var cc2=c+k; if(inside(rr2,cc2)){var t2=board[rr2][cc2]; if(t2!=""&&((me=="w"&&isB(t2))||(me=="b"&&isW(t2))))m.push([rr2,cc2]);}}
+}
+if(p=="♘"||p=="♞"){
+var kn=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];
+for(var j=0;j<kn.length;j++)add(r+kn[j][0],c+kn[j][1]);
+}
+if(p=="♗"||p=="♝"||p=="♕"||p=="♛")slide([[1,1],[1,-1],[-1,1],[-1,-1]]);
+if(p=="♖"||p=="♜"||p=="♕"||p=="♛")slide([[1,0],[-1,0],[0,1],[0,-1]]);
+if(p=="♔"||p=="♚"){for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){if(dr!=0||dc!=0)add(r+dr,c+dc);}}
+return m;
+}
+function draw(){
+var html="";
+for(var r=0;r<8;r++){
+html+='<div class="row">';
+for(var c=0;c<8;c++){
+var cls="cell "+(((r+c)%2==0)?"w":"b");
+if(selR==r&&selC==c)cls="cell sel";
+for(var i=0;i<moves.length;i++){if(moves[i][0]==r&&moves[i][1]==c){if(board[r][c]=="")cls="cell dot"; else cls="cell eat";}}
+html+='<div class="'+cls+'" onclick="clickCell('+r+','+c+')">'+board[r][c]+'</div>';
+}
+html+='</div>';
+}
+document.getElementById("board").innerHTML=html;
+document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih":"Hitam");
+}
+function clickCell(r,c){
+var p=board[r][c];
+var isTarget=false;
+for(var i=0;i<moves.length;i++){if(moves[i][0]==r&&moves[i][1]==c)isTarget=true;}
+if(selR>=0&&isTarget){
+board[r][c]=board[selR][selC]; board[selR][selC]="";
+selR=-1; selC=-1; moves=[]; turn=(turn=="w"?"b":"w");
+document.getElementById("msg").innerHTML="Mantap! Pindah!";
+}else if(p!=""&&((turn=="w"&&isW(p))||(turn=="b"&&isB(p)))){
+selR=r; selC=c; moves=getMoves(r,c);
+document.getElementById("msg").innerHTML="Pilih kotak hijau / merah!";
+}else{selR=-1; selC=-1; moves=[];}
+draw();
+}
+draw();
+</script>
+</body></html>
