@@ -7,8 +7,10 @@ h1{color:#ffcc00}
 #info{background:#222;padding:10px;border-radius:10px}
 #board{width:320px;margin:10px auto;border:4px solid #ffcc00}
 .row{display:flex}
-.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
+.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;font-weight:bold}
 .w{background:#f0d9b5}.b{background:#b58863}
+.pW{color:#ffffff;text-shadow:0 0 2px #000,1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000}
+.pB{color:#000000;text-shadow:0 0 2px #fff,1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff}
 .sel{background:yellow!important}
 .dot{background:#22c55e!important}
 .eat{background:#ef4444!important}
@@ -19,7 +21,7 @@ button{background:#ffcc00;border:0;padding:10px 15px;border-radius:10px;font-wei
 <div id="info"><b id="turn">Giliran: Putih</b><br><span id="msg">Klik bidak, liat kotak hijau!</span></div>
 <div id="board"></div>
 <button onclick="location.reload()">Ulangi Game</button>
-<p>Hijau = Bisa Jalan, Merah = Bisa Makan</p>
+<p>Putih = Kamu &nbsp; Hitam = Lawan<br>Hijau = Bisa Jalan, Merah = Bisa Makan</p>
 <script>
 var board=[
 ["♜","♞","♝","♛","♚","♝","♞","♜"],
@@ -74,15 +76,18 @@ var html="";
 for(var r=0;r<8;r++){
 html+='<div class="row">';
 for(var c=0;c<8;c++){
+var p=board[r][c];
 var cls="cell "+(((r+c)%2==0)?"w":"b");
 if(selR==r&&selC==c)cls="cell sel";
 for(var i=0;i<moves.length;i++){if(moves[i][0]==r&&moves[i][1]==c){if(board[r][c]=="")cls="cell dot"; else cls="cell eat";}}
-html+='<div class="'+cls+'" onclick="clickCell('+r+','+c+')">'+board[r][c]+'</div>';
+var pc="";
+if(isW(p))pc=" pW"; else if(isB(p))pc=" pB";
+html+='<div class="'+cls+pc+'" onclick="clickCell('+r+','+c+')">'+p+'</div>';
 }
 html+='</div>';
 }
 document.getElementById("board").innerHTML=html;
-document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih":"Hitam");
+document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih - Kamu":"Hitam - Lawan");
 }
 function clickCell(r,c){
 var p=board[r][c];
