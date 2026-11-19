@@ -1,61 +1,57 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CATUR RAJA - Game Catur 2 Pemain Terbaik</title>
-<meta name="description" content="CATUR RAJA adalah game catur klasik 2 orang di 1 HP. Siapa makan Raja duluan dia menang! Gratis tanpa download.">
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CATUR RAJA</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0f0f0f;color:#fff;font-family:'Segoe UI',Arial,sans-serif;text-align:center;padding-bottom:30px}
-.top{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;padding:15px 10px}
-.top h1{margin:0;font-size:30px;letter-spacing:1px}
-.top p{margin:5px 0 0;font-size:14px;font-weight:bold}
-.wrap{max-width:460px;margin:0 auto;padding:0 10px}
-.card{background:#1e1e1e;border:1px solid #333;border-radius:16px;padding:14px;margin:12px 0;text-align:left}
-.card h2{margin:0 0 8px;color:#FFD700;font-size:18px}
-.card p, .card li{font-size:14px;line-height:1.6;color:#ddd}
-.card li{margin-bottom:4px}
-.score{display:flex;gap:10px;justify-content:center;margin:12px 0}
-.score div{flex:1;background:#222;border:2px solid #444;border-radius:12px;padding:10px}
-.score div.active{border-color:#FFD700;background:#2a2300}
-.score b{font-size:20px}
-.score span{font-size:12px;color:#aaa}
-#info{background:#222;padding:10px;border-radius:12px;font-weight:bold}
-#turn{color:#FFD700}
-#timer{font-size:18px;color:#00ff88}
-#board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;margin:12px auto;border:4px solid #fff;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;position:relative;user-select:none}
-.white{background:#eeeed2}
-.black{background:#769656}
-.sel{background:#f7f769 !important;box-shadow:inset 0 0 0 3px #FFD700}
-.can{background:#7dd87d !important}
-.can::after{content:'';width:14px;height:14px;background:rgba(0,0,0,.3);border-radius:50%;position:absolute}
-.last{background:#ffcc00 !important}
-.check{background:#ff4444 !important}
-.capture{margin:6px 0;font-size:22px;min-height:28px}
-.moves{background:#111;border-radius:10px;padding:10px;max-height:120px;overflow:auto;text-align:left;font-size:13px;line-height:1.7}
-.btn{padding:13px 16px;border:none;border-radius:12px;font-weight:bold;font-size:15px;cursor:pointer}
-.btn-green{background:#00ff88;color:#000;width:100%;margin-top:8px}
-.btn-gold{background:#FFD700;color:#000}
-.btn-dark{background:#333;color:#fff}
-.flex{display:flex;gap:8px}
-.flex .btn{flex:1}
-details summary{cursor:pointer;color:#FFD700;font-weight:bold}
-footer{color:#888;font-size:12px;margin-top:15px}
-</style>
-</head>
+*{box-sizing:border-box}body{background:#111;color:#fff;font-family:Arial;text-align:center;margin:0;padding:10px}
+h1{color:#ffcc00;margin:5px} #info{background:#222;padding:10px;border-radius:10px;margin:10px}
+#board{width:320px;max-width:95vw;margin:10px auto;display:grid;grid-template-columns:repeat(8,1fr);border:4px solid #ffcc00}
+.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
+.w{background:#f0d9b5}.b{background:#b58863}.sel{outline:4px solid yellow}.hint{outline:4px solid lime}
+button{background:#ffcc00;border:0;padding:10px 15px;border-radius:10px;font-weight:bold;margin:5px}
+</style></head>
 <body>
-<div class="top">
 <h1>♞ CATUR RAJA ♞</h1>
-<p>Game Catur 2 Orang Di 1 HP • Gratis • Tanpa Download</p>
-</div>
-
-<div class="wrap">
-<div class="card">
-<h2>🎮 Tentang Game</h2>
-<p><b>CATUR RAJA</b> adalah game catur klasik yang dibuat khusus untuk dimainkan berdua dalam satu HP tanpa perlu download aplikasi tambahan. Game ini menghadirkan pengalaman bermain catur yang sederhana, cepat, dan seru, cocok untuk semua umur, mulai dari anak-anak yang baru belajar catur sampai orang dewasa yang sudah jago. Dengan tampilan papan catur yang jelas dan bidak yang mudah dikenali, pemain bisa langsung mengerti cara bermainnya hanya dalam beberapa detik.</p>
-<details><summary>📖 Lihat Keterangan Lengkap</summary>
-<p>Di dalam game ini, terdapat semua bidak catur lengkap seperti pion, benteng, kuda, gajah, ratu, dan raja. Setiap bidak memiliki cara jalan yang sesuai dengan aturan catur asli. Pion hanya bisa maju ke depan dan makan secara diagonal, benteng jalan lurus, kuda jalan berbentuk huruf L, gajah jalan diagonal, ratu bisa jalan ke segala arah, dan raja hanya bisa jalan satu langkah ke segala arah. Pemain putih akan jalan duluan, kemudian bergantian dengan pemain hitam sampai salah satu raja berhasil dimakan.</p>
-<p>Cara bermainnya sangat mudah. Pemain hanya perlu klik bidak yang ingin digerakkan, lalu kotak hijau akan muncul menunjukkan tempat yang bisa dituju. Setelah itu, klik kotak hijau tersebut untuk memindahkan bidak. Jika ada bidak lawan di tempat tujuan, bidak tersebut akan dimakan dan hilang dari papan. Jika pion berhasil mencapai ujung papan lawan, pion tersebut akan otomatis berubah menjadi ratu yang sangat kuat.</p>
-<p>Game ini sangat cocok dimainkan bersama teman,
+<div id="info"><b id="turn">Giliran: Putih ⚪</b><br><span id="msg">Klik bidak, lalu klik kotak tujuan</span></div>
+<div id="board"></div>
+<button onclick="location.reload()">🔄 Ulangi Game</button>
+<script>
+let board=[
+["♜","♞","♝","♛","♚","♝","♞","♜"],
+["♟","♟","♟","♟","♟","♟","♟","♟"],
+["","","","","","","",""],
+["","","","","","","",""],
+["","","","","","","",""],
+["","","","","","","",""],
+["♙","♙","♙","♙","♙","♙","♙","♙"],
+["♖","♘","♗","♕","♔","♗","♘","♖"]];
+let turn='w',sel=null;
+let white="♔♕♖♗♘♙",black="♚♛♜♝♞♟";
+function draw(){
+ let b=document.getElementById('board');b.innerHTML='';
+ for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+  let d=document.createElement('div');
+  d.className='cell '+((r+c)%2==0?'w':'b');
+  d.textContent=board[r][c];
+  if(sel&&sel[0]==r&&sel[1]==c)d.classList.add('sel');
+  d.onclick=()=>click(r,c);b.appendChild(d);
+ }
+ document.getElementById('turn').textContent='Giliran: '+(turn=='w'?'Putih ⚪':'Hitam ⚫');
+}
+function click(r,c){
+ let p=board[r][c];
+ if(sel){
+  if(board[r][c]==''||(turn=='w'&&black.includes(p))||(turn=='b'&&white.includes(p))){
+   board[r][c]=board[sel[0]][sel[1]];board[sel[0]][sel[1]]='';sel=null;
+   turn=turn=='w'?'b':'w';
+   document.getElementById('msg').textContent='Pindah! Giliran selanjutnya';
+  }else{sel=null;}
+ }else{
+  if(p!=''&&((turn=='w'&&white.includes(p))||(turn=='b'&&black.includes(p)))){
+   sel=[r,c];document.getElementById('msg').textContent='Bidak dipilih, klik kotak tujuan';
+  }
+ }
+ draw();
+}
+draw();
+</script>
+</body></html>
