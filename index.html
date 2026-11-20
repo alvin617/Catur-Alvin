@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CATUR RAJA ONLINE</title>
+<title>CATUR RAJA - SEMPURNA</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-body{background:#111;color:#fff;font-family:Arial;text-align:center;padding:10px}
-h1{color:#ffcc00;margin:5px}
-#info,#loginBox,#menu{background:#222;padding:14px;border-radius:12px;margin:10px}
-#board{width:320px;margin:10px auto;border:4px solid #ffcc00}
-.row{display:flex}.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer}
+body{background:radial-gradient(#222,#000);color:#fff;font-family:Arial;text-align:center;padding:10px;overflow-x:hidden}
+h1{color:#ffcc00;text-shadow:0 0 15px #ffcc00;margin:5px}
+#info,#loginBox,#menu,#history{background:#222;padding:12px;border-radius:14px;margin:8px;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+#board{width:320px;margin:10px auto;border:5px solid #ffcc00;border-radius:8px;box-shadow:0 0 20px #ffcc00aa}
+.row{display:flex}.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;transition:.15s}
+.cell:hover{transform:scale(1.08)}
 .w{background:#f0d9b5}.b{background:#b58863}
 .pW{color:#fff;text-shadow:0 0 2px #000,1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000}
 .pB{color:#000;text-shadow:0 0 2px #fff,1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff}
-.sel{background:yellow!important}.dot{background:#22c55e!important}.eat{background:#ef4444!important}
-button{background:#ffcc00;border:0;padding:11px 14px;border-radius:10px;font-weight:bold;margin:4px}
+.sel{background:#ffe600!important;box-shadow:inset 0 0 0 3px #ffcc00}
+.dot{background:#22c55e!important}.eat{background:#ef4444!important}
+.check{background:#ff0000!important;animation:blink .5s infinite}
+@keyframes blink{50%{opacity:.5}}
+button{background:linear-gradient(#ffe600,#ffaa00);border:0;padding:11px 14px;border-radius:12px;font-weight:bold;margin:4px;box-shadow:0 3px 0 #aa7700}
+button:active{transform:translateY(2px)}
 input{padding:11px;border-radius:10px;border:0;width:200px;text-align:center;margin:4px}
 .hide{display:none}
-.avatar{width:55px;height:55px;border-radius:50%;background:#ffcc00;color:#000;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;margin:5px auto}
+.avatar{width:55px;height:55px;border-radius:50%;background:linear-gradient(#ffe600,#ff8800);color:#000;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;margin:5px auto}
+#winBox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:999;padding:20px}
+#winBox.show{display:flex}
+.trophy{font-size:100px;animation:bounce .8s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.15)}}
+.winText{font-size:32px;color:#ffcc00;font-weight:bold}
+.confetti{position:fixed;top:-20px;width:12px;height:18px;z-index:1000;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+#timer{font-size:18px;font-weight:bold;color:#ffcc00}
 </style></head>
 <body>
-<h1>♞ CATUR RAJA ONLINE ♞</h1>
+<h1>♞ CATUR RAJA 👑 SEMPURNA ♞</h1>
 
-<div id="loginBox">
-<div class="avatar">♞</div>
-<h3 id="loginTitle">LOGIN / DAFTAR</h3>
+<div id="winBox"><div class="trophy">🏆</div><div class="winText" id="winText">KAMU MENANG!!</div><p id="winSub"></p><button onclick="closeWin()">🎮 Main Lagi</button></div>
+
+<div id="loginBox"><div class="avatar">♞</div><h3>LOGIN / DAFTAR</h3>
 <input id="userName" placeholder="Nama Kamu (mis: Alvin)"><br>
 <input id="userPass" type="password" placeholder="Password"><br>
-<button onclick="doLogin()">🔑 Login</button>
-<button onclick="doDaftar()">📝 Daftar Akun Baru</button>
-<p id="loginMsg" style="font-size:13px;color:#ffcc00"></p>
-<p style="font-size:12px;opacity:.6">Akun tersimpan di HP kamu, aman.</p>
-</div>
+<button onclick="doLogin()">🔑 Login</button><button onclick="doDaftar()">📝 Daftar</button>
+<p id="loginMsg" style="font-size:13px;color:#ffcc00"></p></div>
 
-<div id="userBar" class="hide">
-<div class="avatar" id="avatarHuruf">A</div>
-<b id="haloUser">Halo, Alvin</b><br>
-<span id="skorUser" style="font-size:13px">🏆 Menang: 0 | Main: 0</span><br>
-<button onclick="doLogout()" style="background:#ff5555;color:#fff">Keluar</button>
-</div>
+<div id="userBar" class="hide"><div class="avatar" id="avatarHuruf">A</div><b id="haloUser"></b><br><span id="skorUser"></span><br><button onclick="doLogout()" style="background:#ff5555;color:#fff">Keluar</button></div>
 
-<div id="info"><b id="turn">Login Dulu Buat Main</b><br><span id="msg">Daftar / Login di atas dulu ya!</span></div>
+<div id="info"><b id="turn">Login Dulu Buat Main</b><br><span id="msg">Daftar / Login dulu ya!</span><br><span id="timer">⏱️ 10:00</span><br><b id="checkInfo" style="color:#ff5555"></b></div>
 
 <div id="menu" class="hide">
 <button onclick="startOffline()">📱 Main Berdua (1 HP)</button><br>
-<button onclick="showOnline()">🌐 Main Online (Beda HP)</button>
-<div id="onlineBox" class="hide" style="margin-top:10px">
-<button onclick="createRoom()">Buat Room</button>
-<p>atau</p>
-<input id="roomInput" placeholder="Masukin Kode Room"><br><br>
-<button onclick="joinRoom()">Gabung Room</button>
-<p id="roomInfo" style="font-size:13px;color:#ffcc00"></p>
-<button onclick="copyLink()">📋 Salin Link Room</button>
-</div>
+<button onclick="showOnline()">🌐 Main Online</button>
+<div id="onlineBox" class="hide"><button onclick="createRoom()">Buat Room</button><p>atau</p><input id="roomInput" placeholder="Masukin Kode Room"><br><br><button onclick="joinRoom()">Gabung Room</button><p id="roomInfo" style="font-size:13px;color:#ffcc00"></p><button onclick="copyLink()">📋 Salin Link Room</button></div>
 </div>
 
 <div id="board"></div>
+<div id="history"><b>📜 Riwayat Jalan:</b><br><span id="historyText">Belum ada jalan</span></div>
 <button onclick="location.reload()">🔄 Ulangi Game</button>
-<p>Putih = Kamu &nbsp; Hitam = Lawan<br>Hijau = Bisa Jalan, Merah = Bisa Makan</p>
+<p style="opacity:.6;font-size:12px">Putih = Kamu | Hitam = Lawan | Hijau = Jalan | Merah = Makan | Merah Kedip = CHECK!</p>
 <script>
 var board=[
 ["♜","♞","♝","♛","♚","♝","♞","♜"],
@@ -66,52 +65,41 @@ var board=[
 ["","","","","","","",""],
 ["♙","♙","♙","♙","♙","♙","♙","♙"],
 ["♖","♘","♗","♕","♔","♗","♘","♖"]];
-var turn="w"; var selR=-1; var selC=-1; var moves=[];
-var W="♔♕♖♗♘♙"; var B="♚♛♜♝♞♟";
-var mode="offline"; var myColor="w"; var peer=null; var conn=null; var myRoom="";
-var currentUser=""; var isLogin=false;
-function isW(p){return W.indexOf(p)>=0}
-function isB(p){return B.indexOf(p)>=0}
+var turn="w",selR=-1,selC=-1,moves=[],gameOver=false,historyArr=[],timeLeft=600,timerOn=false;
+var W="♔♕♖♗♘♙",B="♚♛♜♝♞♟";
+var mode="offline",myColor="w",peer=null,conn=null,myRoom="",currentUser="",isLogin=false;
+function isW(p){return W.indexOf(p)>=0} function isB(p){return B.indexOf(p)>=0}
 function inside(r,c){return r>=0&&r<8&&c>=0&&c<8}
-// LOGIN SYSTEM
+function playSound(type){try{var a=new (window.AudioContext||window.webkitAudioContext)();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=type=="eat"?200:type=="win"?800:500;o.type="sine";g.gain.value=0.2;o.start();o.stop(a.currentTime+(type=="win"?0.6:0.15));if(type=="win"){setTimeout(function(){var o2=a.createOscillator();o2.connect(g);o2.frequency.value=1000;o2.start();o2.stop(a.currentTime+0.3)},200)}}catch(e){}}
 function getUsers(){try{return JSON.parse(localStorage.getItem("catur_users")||"{}")}catch(e){return {}}}
 function saveUsers(u){localStorage.setItem("catur_users",JSON.stringify(u))}
 function getSkor(n){try{return JSON.parse(localStorage.getItem("catur_skor_"+n)||'{"win":0,"main":0}')}catch(e){return {win:0,main:0}}}
 function saveSkor(n,s){localStorage.setItem("catur_skor_"+n,JSON.stringify(s))}
-function updateBar(){
-var s=getSkor(currentUser);
-document.getElementById("haloUser").innerHTML="Halo, "+currentUser+" 👋";
-document.getElementById("avatarHuruf").innerHTML=currentUser.charAt(0).toUpperCase();
-document.getElementById("skorUser").innerHTML="🏆 Menang: "+s.win+" | Main: "+s.main;
+function updateBar(){var s=getSkor(currentUser);document.getElementById("haloUser").innerHTML="Halo, "+currentUser+" 👋";document.getElementById("avatarHuruf").innerHTML=currentUser.charAt(0).toUpperCase();document.getElementById("skorUser").innerHTML="🏆 Menang: "+s.win+" | Main: "+s.main;}
+function doDaftar(){var n=document.getElementById("userName").value.trim();var p=document.getElementById("userPass").value.trim();if(!n||!p){document.getElementById("loginMsg").innerHTML="Isi nama + password dulu!";return;}var u=getUsers();if(u[n]){document.getElementById("loginMsg").innerHTML="Nama udah ada, tinggal Login!";return;}u[n]=p;saveUsers(u);saveSkor(n,{win:0,main:0});document.getElementById("loginMsg").innerHTML="Berhasil daftar! Pencet Login!";}
+function doLogin(){var n=document.getElementById("userName").value.trim();var p=document.getElementById("userPass").value.trim();var u=getUsers();if(!u[n]){document.getElementById("loginMsg").innerHTML="Akun belum ada, Daftar dulu!";return;}if(u[n]!=p){document.getElementById("loginMsg").innerHTML="Password salah!";return;}currentUser=n;isLogin=true;localStorage.setItem("catur_login",n);document.getElementById("loginBox").classList.add("hide");document.getElementById("userBar").classList.remove("hide");document.getElementById("menu").classList.remove("hide");updateBar();document.getElementById("turn").innerHTML="Selamat Datang, "+n+"!";document.getElementById("msg").innerHTML="Pilih mode main!";draw();}
+function doLogout(){localStorage.removeItem("catur_login");location.reload();}
+var saved=localStorage.getItem("catur_login");if(saved){document.getElementById("userName").value=saved;document.getElementById("userPass").value=getUsers()[saved]||"";}
+function startConfetti(){var colors=["#ffcc00","#ff5555","#22c55e","#3b82f6","#ff00ff","#fff"];for(var i=0;i<100;i++){var d=document.createElement("div");d.className="confetti";d.style.left=Math.random()*100+"vw";d.style.background=colors[i%colors.length];d.style.animationDuration=(Math.random()*2+2)+"s";d.style.animationDelay=(Math.random()*0.8)+"s";document.body.appendChild(d);setTimeout(function(el){return function(){el.remove()}}(d),4000);}}
+function showWin(txt,isMe){playSound("win");document.getElementById("winText").innerHTML=txt;document.getElementById("winSub").innerHTML=isMe?"Kamu hebat banget!":"Coba lagi, kamu pasti bisa!";document.getElementById("winBox").classList.add("show");startConfetti();if(isMe&&currentUser){var s=getSkor(currentUser);s.win++;saveSkor(currentUser,s);updateBar();}}
+function closeWin(){document.getElementById("winBox").classList.remove("show");location.reload();}
+function isKingInCheck(color){
+var kr=-1,kc=-1;for(var r=0;r<8;r++)for(var c=0;c<8;c++){if(color=="w"&&board[r][c]=="♔"){kr=r;kc=c}if(color=="b"&&board[r][c]=="♚"){kr=r;kc=c}}
+if(kr==-1) return false;
+var enemyTurn=color=="w"?"b":"w";
+for(var r=0;r<8;r++)for(var c=0;c<8;c++){var p=board[r][c];if(p!=""&&((enemyTurn=="w"&&isW(p))||(enemyTurn=="b"&&isB(p)))){var oldTurn=turn;turn=enemyTurn;var ms=getMoves(r,c);turn=oldTurn;for(var i=0;i<ms.length;i++){if(ms[i][0]==kr&&ms[i][1]==kc) return true;}}}
+return false;
 }
-function doDaftar(){
-var n=document.getElementById("userName").value.trim(); var p=document.getElementById("userPass").value.trim();
-if(!n||!p){document.getElementById("loginMsg").innerHTML="Isi nama + password dulu!"; return;}
-var u=getUsers(); if(u[n]){document.getElementById("loginMsg").innerHTML="Nama udah ada, tinggal Login aja!"; return;}
-u[n]=p; saveUsers(u); saveSkor(n,{win:0,main:0});
-document.getElementById("loginMsg").innerHTML="Berhasil daftar! Sekarang pencet Login!";
+function checkWin(){
+var hasW=false,hasB=false;for(var r=0;r<8;r++)for(var c=0;c<8;c++){if(board[r][c]=="♔")hasW=true;if(board[r][c]=="♚")hasB=true;}
+if(!hasW){gameOver=true;if(mode=="offline")showWin("HITAM MENANG!! 🏆",false);else showWin(myColor=="b"?"KAMU MENANG!! 🎉":"LAWAN MENANG 😭",myColor=="b");return true;}
+if(!hasB){gameOver=true;if(mode=="offline")showWin("PUTIH MENANG!! 🏆",true);else showWin(myColor=="w"?"KAMU MENANG!! 🎉":"LAWAN MENANG 😭",myColor=="w");return true;}
+if(isKingInCheck(turn)){document.getElementById("checkInfo").innerHTML="⚠️ CHECK! Raja "+(turn=="w"?"Putih":"Hitam")+" Terancam!";}else{document.getElementById("checkInfo").innerHTML="";}
+return false;
 }
-function doLogin(){
-var n=document.getElementById("userName").value.trim(); var p=document.getElementById("userPass").value.trim();
-var u=getUsers();
-if(!u[n]){document.getElementById("loginMsg").innerHTML="Akun belum ada, pencet Daftar dulu!"; return;}
-if(u[n]!=p){document.getElementById("loginMsg").innerHTML="Password salah! Coba lagi!"; return;}
-currentUser=n; isLogin=true; localStorage.setItem("catur_login",n);
-document.getElementById("loginBox").classList.add("hide");
-document.getElementById("userBar").classList.remove("hide");
-document.getElementById("menu").classList.remove("hide");
-updateBar();
-document.getElementById("turn").innerHTML="Selamat Datang, "+n+"!";
-document.getElementById("msg").innerHTML="Pilih mode main di bawah!";
-draw();
-}
-function doLogout(){localStorage.removeItem("catur_login"); location.reload();}
-var saved=localStorage.getItem("catur_login");
-if(saved){document.getElementById("userName").value=saved; document.getElementById("userPass").value=getUsers()[saved]||""; }
-// GAME
 function getMoves(r,c){
-var p=board[r][c]; var m=[]; var me=turn;
-function add(rr,cc){if(!inside(rr,cc))return; var t=board[rr][cc]; if(t=="")m.push([rr,cc]); else if((me=="w"&&isB(t))||(me=="b"&&isW(t)))m.push([rr,cc]);}
+var p=board[r][c];var m=[];var me=turn;
+function add(rr,cc){if(!inside(rr,cc))return;var t=board[rr][cc];if(t=="")m.push([rr,cc]);else if((me=="w"&&isB(t))||(me=="b"&&isW(t)))m.push([rr,cc]);}
 function slide(dirs){for(var i=0;i<dirs.length;i++){var dr=dirs[i][0];var dc=dirs[i][1];var rr=r+dr;var cc=c+dc;while(inside(rr,cc)){var t=board[rr][cc];if(t=="")m.push([rr,cc]);else{if((me=="w"&&isB(t))||(me=="b"&&isW(t)))m.push([rr,cc]);break;}rr+=dr;cc+=dc;}}}
 if(p=="♙"||p=="♟"){var dir=(p=="♙"?-1:1);var start=(p=="♙"?6:1);if(inside(r+dir,c)&&board[r+dir][c]==""){m.push([r+dir,c]);if(r==start&&board[r+dir*2][c]=="")m.push([r+dir*2,c]);}for(var k=-1;k<=1;k+=2){var rr2=r+dir;var cc2=c+k;if(inside(rr2,cc2)){var t2=board[rr2][cc2];if(t2!=""&&((me=="w"&&isB(t2))||(me=="b"&&isW(t2))))m.push([rr2,cc2]);}}}
 if(p=="♘"||p=="♞"){var kn=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];for(var j=0;j<kn.length;j++)add(r+kn[j][0],c+kn[j][1]);}
@@ -121,7 +109,8 @@ if(p=="♔"||p=="♚"){for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){if(dr!
 return m;
 }
 function draw(){
-var html="";
+var html="";var checkPos=null;
+if(isKingInCheck(turn)){for(var r=0;r<8;r++)for(var c=0;c<8;c++){if((turn=="w"&&board[r][c]=="♔")||(turn=="b"&&board[r][c]=="♚"))checkPos=[r,c];}}
 for(var r=0;r<8;r++){
 var rr=(mode=="online"&&myColor=="b")?7-r:r;
 html+='<div class="row">';
@@ -129,51 +118,54 @@ for(var c=0;c<8;c++){
 var cc=(mode=="online"&&myColor=="b")?7-c:c;
 var p=board[rr][cc];
 var cls="cell "+(((rr+cc)%2==0)?"w":"b");
+if(checkPos&&checkPos[0]==rr&&checkPos[1]==cc)cls="cell check";
 if(selR==rr&&selC==cc)cls="cell sel";
 for(var i=0;i<moves.length;i++){if(moves[i][0]==rr&&moves[i][1]==cc){if(board[rr][cc]=="")cls="cell dot";else cls="cell eat";}}
-var pc=""; if(isW(p))pc=" pW"; else if(isB(p))pc=" pB";
+var pc="";if(isW(p))pc=" pW";else if(isB(p))pc=" pB";
 html+='<div class="'+cls+pc+'" onclick="clickCell('+rr+','+cc+')">'+p+'</div>';
 }
 html+='</div>';
 }
 document.getElementById("board").innerHTML=html;
 if(isLogin){
-if(mode=="offline") document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih":"Hitam");
-else document.getElementById("turn").innerHTML="Kamu: "+(myColor=="w"?"Putih":"Hitam")+" | Giliran: "+(turn=="w"?"Putih":"Hitam")+(turn==myColor?" - JALAN KAMU!":" - Tunggu Lawan...");
+if(mode=="offline")document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih ⚪":"Hitam ⚫");
+else document.getElementById("turn").innerHTML="Kamu: "+(myColor=="w"?"Putih ⚪":"Hitam ⚫")+" | Giliran: "+(turn=="w"?"Putih":"Hitam")+(turn==myColor?" - JALAN KAMU!":" - Tunggu Lawan...");
 }
 }
 function doMove(fr,fc,tr,tc,send){
-board[tr][tc]=board[fr][fc]; board[fr][fc]="";
-selR=-1; selC=-1; moves=[]; turn=(turn=="w"?"b":"w");
-document.getElementById("msg").innerHTML="Mantap! Pindah!";
-if(send&&conn&&conn.open) conn.send({fr:fr,fc:fc,tr:tr,tc:tc});
-draw();
+if(gameOver)return;
+var target=board[tr][tc];var mover=board[fr][fc];
+var isEat=target!="";
+board[tr][tc]=mover;board[fr][fc]="";
+// PROMOSI PION
+if(mover=="♙"&&tr==0)board[tr][tc]="♕";
+if(mover=="♟"&&tr==7)board[tr][tc]="♛";
+selR=-1;selC=-1;moves=[];turn=(turn=="w"?"b":"w");
+historyArr.push((mover)+" "+String.fromCharCode(97+fc)+(8-fr)+" → "+String.fromCharCode(97+tc)+(8-tr)+(isEat?" (Makan!)":""));
+document.getElementById("historyText").innerHTML=historyArr.join(" | ");
+document.getElementById("msg").innerHTML=isEat?"Makan! Mantap!":"Mantap! Pindah!";
+playSound(isEat?"eat":"move");
+if(send&&conn&&conn.open)conn.send({fr:fr,fc:fc,tr:tr,tc:tc});
+draw();checkWin();
 }
 function clickCell(r,c){
-if(!isLogin){document.getElementById("msg").innerHTML="Login dulu baru bisa main!"; return;}
-if(mode=="online"&&turn!=myColor){document.getElementById("msg").innerHTML="Bukan giliran kamu, tunggu lawan!"; return;}
-var p=board[r][c]; var isTarget=false;
+if(!isLogin){document.getElementById("msg").innerHTML="Login dulu baru bisa main!";return;}
+if(gameOver){document.getElementById("msg").innerHTML="Game udah selesai!";return;}
+if(mode=="online"&&turn!=myColor){document.getElementById("msg").innerHTML="Bukan giliran kamu!";return;}
+var p=board[r][c];var isTarget=false;
 for(var i=0;i<moves.length;i++){if(moves[i][0]==r&&moves[i][1]==c)isTarget=true;}
 if(selR>=0&&isTarget){doMove(selR,selC,r,c,true);}
-else if(p!=""&&((turn=="w"&&isW(p))||(turn=="b"&&isB(p)))){selR=r; selC=c; moves=getMoves(r,c); document.getElementById("msg").innerHTML="Pilih kotak hijau / merah!";}
-else{selR=-1; selC=-1; moves=[];}
+else if(p!=""&&((turn=="w"&&isW(p))||(turn=="b"&&isB(p)))){selR=r;selC=c;moves=getMoves(r,c);document.getElementById("msg").innerHTML="Pilih kotak hijau / merah!";}
+else{selR=-1;selC=-1;moves=[];}
 draw();
 }
-function startOffline(){if(!isLogin){alert("Login dulu!"); return;} mode="offline"; document.getElementById("menu").classList.add("hide"); document.getElementById("msg").innerHTML="Main berdua 1 HP, gantian ya!"; if(currentUser){var s=getSkor(currentUser); s.main++; saveSkor(currentUser,s); updateBar();} draw();}
-function showOnline(){if(!isLogin){alert("Login dulu!"); return;} document.getElementById("onlineBox").classList.remove("hide");}
-function createRoom(){
-myRoom="catur-"+Math.floor(Math.random()*90000+10000); myColor="w"; mode="online";
-peer=new Peer(myRoom);
-peer.on("open",function(){document.getElementById("roomInfo").innerHTML="Kode Room Kamu: <b>"+myRoom+"</b><br>Kirim ke temen lu! Menunggu..."; document.getElementById("menu").classList.add("hide"); document.getElementById("msg").innerHTML="Kamu Putih. Tunggu lawan..."; draw();});
-peer.on("connection",function(c){conn=c; conn.on("data",function(d){doMove(d.fr,d.fc,d.tr,d.tc,false);}); conn.on("open",function(){document.getElementById("msg").innerHTML="Lawan udah gabung! Kamu jalan duluan!"; draw();});});
-}
-function joinRoom(){
-var code=document.getElementById("roomInput").value.trim(); if(!code){alert("Masukin kode dulu!"); return;}
-myColor="b"; mode="online"; myRoom=code; peer=new Peer();
-peer.on("open",function(){conn=peer.connect(code); conn.on("open",function(){document.getElementById("menu").classList.add("hide"); document.getElementById("msg").innerHTML="Nyambung! Kamu Hitam, tunggu Putih jalan..."; draw();}); conn.on("data",function(d){doMove(d.fr,d.fc,d.tr,d.tc,false);});});
-}
-function copyLink(){var link=location.href.split("?")[0]+"?room="+myRoom; if(navigator.clipboard) navigator.clipboard.writeText(link); alert("Link tersalin! Kirim ke temen lu:\n"+link);}
-var q=new URLSearchParams(location.search); if(q.get("room")){document.getElementById("onlineBox").classList.remove("hide"); document.getElementById("roomInput").value=q.get("room");}
+function startTimer(){if(timerOn)return;timerOn=true;setInterval(function(){if(gameOver)return;if(!isLogin)return;timeLeft--;var mm=Math.floor(timeLeft/60);var ss=timeLeft%60;document.getElementById("timer").innerHTML="⏱️ "+mm+":"+(ss<10?"0":"")+ss;if(timeLeft<=0){gameOver=true;showWin("WAKTU HABIS! "+(turn=="w"?"HITAM MENANG!":"PUTIH MENANG!"),false);}},1000);}
+function startOffline(){if(!isLogin){alert("Login dulu!");return;}mode="offline";document.getElementById("menu").classList.add("hide");document.getElementById("msg").innerHTML="Main berdua 1 HP!";if(currentUser){var s=getSkor(currentUser);s.main++;saveSkor(currentUser,s);updateBar();}startTimer();draw();}
+function showOnline(){if(!isLogin){alert("Login dulu!");return;}document.getElementById("onlineBox").classList.remove("hide");}
+function createRoom(){myRoom="catur-"+Math.floor(Math.random()*90000+10000);myColor="w";mode="online";peer=new Peer(myRoom);peer.on("open",function(){document.getElementById("roomInfo").innerHTML="Kode: <b>"+myRoom+"</b><br>Menunggu lawan...";document.getElementById("menu").classList.add("hide");document.getElementById("msg").innerHTML="Kamu Putih. Tunggu lawan...";startTimer();draw();});peer.on("connection",function(c){conn=c;conn.on("data",function(d){doMove(d.fr,d.fc,d.tr,d.tc,false);});conn.on("open",function(){document.getElementById("msg").innerHTML="Lawan gabung! Kamu jalan duluan!";draw();});});}
+function joinRoom(){var code=document.getElementById("roomInput").value.trim();if(!code){alert("Masukin kode dulu!");return;}myColor="b";mode="online";myRoom=code;peer=new Peer();peer.on("open",function(){conn=peer.connect(code);conn.on("open",function(){document.getElementById("menu").classList.add("hide");document.getElementById("msg").innerHTML="Nyambung! Kamu Hitam!";startTimer();draw();});conn.on("data",function(d){doMove(d.fr,d.fc,d.tr,d.tc,false);});});}
+function copyLink(){var link=location.href.split("?")[0]+"?room="+myRoom;if(navigator.clipboard)navigator.clipboard.writeText(link);alert("Link tersalin!\n"+link);}
+var q=new URLSearchParams(location.search);if(q.get("room")){document.getElementById("onlineBox").classList.remove("hide");document.getElementById("roomInput").value=q.get("room");}
 draw();
 </script>
 </body></html>
