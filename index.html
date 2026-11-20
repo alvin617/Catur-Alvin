@@ -1,396 +1,98 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CATUR RAJA - SEMPURNA FINAL LENGKAP</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CATUR RAJA</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-  body {
-    background: radial-gradient(#2b2b2b, #000);
-    color: #fff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 10px;
-    overflow-x: hidden;
-  }
-  h1 {
-    color: #ffcc00;
-    text-shadow: 0 0 15px #ffcc00;
-    margin: 5px;
-    font-size: 28px;
-  }
-  #info, #loginBox, #menu, #history, #tray {
-    background: #222;
-    padding: 14px;
-    border-radius: 14px;
-    margin: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.5);
-  }
-  #board {
-    width: 320px;
-    margin: 12px auto;
-    border: 5px solid #ffcc00;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(255,204,0,.6);
-  }
-  .row { display: flex; }
-  .cell {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    cursor: pointer;
-  }
-  .w { background: #f0d9b5; }
-  .b { background: #b58863; }
-  .pW {
-    color: #fff;
-    text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000,
-                 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
-  }
-  .pB {
-    color: #111;
-    text-shadow: 1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff;
-  }
-  .sel { background: #ffe600 !important; }
-  .dot { background: #22c55e !important; }
-  .eat { background: #ef4444 !important; }
-  .check { background: #ff0000 !important; animation: blink .5s infinite; }
-  @keyframes blink { 50% { opacity: .5; } }
-  button {
-    background: linear-gradient(#ffe600, #ffaa00);
-    border: 0;
-    padding: 11px 16px;
-    border-radius: 12px;
-    font-weight: bold;
-    margin: 4px;
-    cursor: pointer;
-  }
-  button:active { transform: translateY(2px); }
-  input {
-    padding: 11px;
-    border-radius: 10px;
-    border: 0;
-    width: 200px;
-    text-align: center;
-    margin: 4px;
-  }
-  .hide { display: none; }
-  .avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: linear-gradient(#ffe600, #ff8800);
-    color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    margin: 5px auto;
-  }
-  #winBox, #promoBox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.92);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 999;
-    padding: 20px;
-  }
-  #winBox.show, #promoBox.show { display: flex; }
-  .trophy { font-size: 100px; animation: bounce .8s infinite; }
-  @keyframes bounce {
-    0%,100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.15); }
-  }
-  .winText { font-size: 32px; color: #ffcc00; font-weight: bold; }
-  .confetti {
-    position: fixed;
-    top: -20px;
-    width: 12px;
-    height: 18px;
-    z-index: 1000;
-    animation: fall linear forwards;
-  }
-  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
-  .promoBtn { font-size: 32px; padding: 12px 16px; background: #fff; color: #000; }
-  .promoBtn small { display: block; font-size: 12px; }
-  .reviveBtn { background: #22c55e !important; color: #fff !important; font-size: 17px; padding: 13px; }
-  .trayBox { font-size: 26px; min-height: 30px; }
-  #timer { font-size: 18px; font-weight: bold; color: #ffcc00; }
-  #checkInfo { color: #ff5555; font-weight: bold; }
-</style>
-</head>
+body{background:#111;color:#fff;font-family:Arial;text-align:center;padding:10px}
+h1{color:#ffcc00}
+.box{background:#222;padding:12px;border-radius:14px;margin:8px}
+#board{width:320px;margin:10px auto;border:5px solid #ffcc00}
+.row{display:flex}.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer}
+.w{background:#f0d9b5}.b{background:#b58863}
+.pW{color:#fff;text-shadow:2px 0 0 #000,-2px 0 0 #000,0 2px 0 #000,0 -2px 0 #000}
+.pB{color:#111;text-shadow:1px 0 0 #fff,-1px 0 0 #fff,0 1px 0 #fff,0 -1px 0 #fff}
+.sel{background:#ffe600!important}.dot{background:#22c55e!important}.eat{background:#ef4444!important}
+.check{background:red!important}
+button{background:#ffcc00;border:0;padding:11px 14px;border-radius:12px;font-weight:bold;margin:4px}
+input{padding:11px;border-radius:10px;border:0;width:180px;text-align:center;margin:4px}
+.hide{display:none}
+#winBox,#promoBox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:999;padding:20px}
+#winBox.show,#promoBox.show{display:flex}
+.reviveBtn{background:#22c55e!important;color:#fff!important}
+</style></head>
 <body>
+<h1>♞ CATUR RAJA 👑 ♞</h1>
 
-<h1>♞ CATUR RAJA 👑 SEMPURNA ♞</h1>
+<div id="promoBox"><h2>🎉 PION SAMPE UJUNG!</h2><p id="promoTitle"></p>
+<button onclick="choosePromo('Q')" style="font-size:30px">♕<br><small>Ratu</small></button>
+<button onclick="choosePromo('R')" style="font-size:30px">♖<br><small>Benteng</small></button>
+<button onclick="choosePromo('B')" style="font-size:30px">♗<br><small>Gajah</small></button>
+<button onclick="choosePromo('N')" style="font-size:30px">♘<br><small>Kuda</small></button>
+<p>✨ ATAU SUMMON Bidak Mati:</p><div id="reviveList"></div><p id="noRevive" style="font-size:12px"></p></div>
 
-<!-- POPUP PION SAMPE UJUNG / REVIVE -->
-<div id="promoBox">
-  <h2 style="color:#ffcc00;">🎉 PION SAMPE UJUNG!</h2>
-  <p id="promoTitle">Pion sampe ujung!</p>
-  <div>
-    <button class="promoBtn" onclick="choosePromo('Q')">♕<small>Ratu</small></button>
-    <button class="promoBtn" onclick="choosePromo('R')">♖<small>Benteng</small></button>
-    <button class="promoBtn" onclick="choosePromo('B')">♗<small>Gajah</small></button>
-    <button class="promoBtn" onclick="choosePromo('N')">♘<small>Kuda</small></button>
-  </div>
-  <p style="margin-top:18px;">✨ ATAU SUMMON Bidak Mati:</p>
-  <div id="reviveList"></div>
-  <p id="noRevive" style="font-size:13px; opacity:.7;"></p>
-</div>
+<div id="winBox"><div style="font-size:100px">🏆</div><div id="winText" style="font-size:30px;color:#ffcc00;font-weight:bold"></div><button onclick="location.reload()">🎮 Main Lagi</button></div>
 
-<!-- POPUP MENANG -->
-<div id="winBox">
-  <div class="trophy">🏆</div>
-  <div class="winText" id="winText"></div>
-  <p id="winSub"></p>
-  <button onclick="closeWin()">🎮 Main Lagi</button>
-</div>
+<div id="loginBox" class="box"><h3>LOGIN / DAFTAR</h3>
+<input id="userName" placeholder="Nama Kamu"><br>
+<input id="userPass" type="password" placeholder="Password"><br>
+<button onclick="doLogin()">🔑 Login</button><button onclick="doDaftar()">📝 Daftar</button>
+<p id="loginMsg" style="color:#ffcc00"></p></div>
 
-<!-- LOGIN -->
-<div id="loginBox">
-  <div class="avatar">♞</div>
-  <h3>LOGIN / DAFTAR</h3>
-  <input id="userName" placeholder="Nama Kamu (mis: Alvin)">
-  <br>
-  <input id="userPass" type="password" placeholder="Password">
-  <br>
-  <button onclick="doLogin()">🔑 Login</button>
-  <button onclick="doDaftar()">📝 Daftar Akun Baru</button>
-  <p id="loginMsg" style="color:#ffcc00;"></p>
-  <p style="font-size:12px; opacity:.6;">Akun tersimpan di HP kamu.</p>
-</div>
+<div id="userBar" class="box hide"><b id="haloUser"></b><br><span id="skorUser"></span><br><button onclick="localStorage.removeItem('catur_login');location.reload()" style="background:#ff5555;color:#fff">Keluar</button></div>
 
-<!-- BAR USER -->
-<div id="userBar" class="hide">
-  <div class="avatar" id="avatarHuruf">A</div>
-  <b id="haloUser"></b>
-  <br>
-  <span id="skorUser"></span>
-  <br>
-  <button onclick="doLogout()" style="background:#ff5555; color:#fff;">Keluar</button>
-</div>
+<div class="box"><b id="turn">Giliran: Putih ⚪</b><br><span id="msg">Pilih bidak Putih dulu!</span><br><span id="timer">⏱️ 10:00</span><br><b id="checkInfo" style="color:#ff5555"></b></div>
 
-<!-- INFO -->
-<div id="info">
-  <b id="turn">Login Dulu Buat Main</b>
-  <br>
-  <span id="msg">Daftar / Login dulu ya!</span>
-  <br>
-  <span id="timer">⏱️ 10:00</span>
-  <br>
-  <b id="checkInfo"></b>
-</div>
+<div id="menu" class="box hide"><button onclick="startOffline()">📱 Main Berdua (1 HP)</button><br><button onclick="showOnline()">🌐 Main Online</button>
+<div id="onlineBox" class="hide"><button onclick="createRoom()">Buat Room</button><br><input id="roomInput" placeholder="Kode Room"><br><button onclick="joinRoom()">Gabung</button><p id="roomInfo"></p><button onclick="copyLink()">📋 Salin Link</button></div></div>
 
-<!-- MENU -->
-<div id="menu" class="hide">
-  <button onclick="startOffline()">📱 Main Berdua (1 HP)</button>
-  <br>
-  <button onclick="showOnline()">🌐 Main Online (Beda HP)</button>
-  <div id="onlineBox" class="hide" style="margin-top:10px;">
-    <button onclick="createRoom()">Buat Room</button>
-    <p>atau</p>
-    <input id="roomInput" placeholder="Masukin Kode Room">
-    <br><br>
-    <button onclick="joinRoom()">Gabung Room</button>
-    <p id="roomInfo" style="font-size:13px; color:#ffcc00;"></p>
-    <button onclick="copyLink()">📋 Salin Link Room</button>
-  </div>
-</div>
+<div class="box">Bidak Hitam mati:<div id="trayW" style="font-size:24px">-</div>Bidak Putih mati:<div id="trayB" style="font-size:24px">-</div><span style="font-size:12px">Pion sampe ujung = bisa Summon!</span></div>
 
-<!-- TRAY BIDAK MATI -->
-<div id="tray">
-  <b>Bidak Hitam yang mati (punya Putih):</b>
-  <div class="trayBox" id="trayW">-</div>
-  <b>Bidak Putih yang mati (punya Hitam):</b>
-  <div class="trayBox" id="trayB">-</div>
-  <p style="font-size:12px; opacity:.7;">Cara Summon: Pion kecil jalan sampe ujung -> Pilih ✨ Hidupin bidak mati</p>
-</div>
-
-<!-- PAPAN -->
 <div id="board"></div>
 
-<!-- RIWAYAT -->
-<div id="history">
-  <b>📜 Riwayat Jalan:</b><br>
-  <span id="historyText">Belum ada jalan</span>
-</div>
-
-<button onclick="location.reload()">🔄 Ulangi Game</button>
-<p style="opacity:.6; font-size:12px;">Putih = Kamu | Hitam = Lawan | Hijau = Bisa Jalan | Merah = Bisa Makan | Merah Kedip = CHECK!</p>
+<div class="box"><b>📜 Riwayat:</b><br><span id="historyText">Belum ada jalan</span></div>
+<button onclick="location.reload()">🔄 Ulangi</button>
 
 <script>
-// =====================================================
-// 1. DATA PAPAN - PAKE KODE biar gak ketukar lagi
-// w = putih, b = hitam
-// K=Raja, Q=Ratu, R=Benteng, B=Gajah, N=Kuda, P=Pion kecil
-// =====================================================
-var ICON = {
-  wK: "♔", wQ: "♕", wR: "♖", wB: "♗", wN: "♘", wP: "♙",
-  bK: "♚", bQ: "♛", bR: "♜", bB: "♝", bN: "♞", bP: "♟"
-};
-
-var NAMES = {
-  Q: "Ratu",
-  R: "Benteng",
-  B: "Gajah",
-  N: "Kuda",
-  P: "Pion"
-};
-
-var board = [
-  ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
-  ["bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"],
-  ["", "", "", "", "", "", "", ""],
-  ["", "", "", "", "", "", "", ""],
-  ["", "", "", "", "", "", "", ""],
-  ["", "", "", "", "", "", "", ""],
-  ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
-  ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
-];
-
-var turn = "w";
-var selR = -1;
-var selC = -1;
-var moves = [];
-var gameOver = false;
-var historyArr = [];
-var timeLeft = 600;
-var timerOn = false;
-
-var capturedW = []; // bidak hitam yang dimakan putih
-var capturedB = []; // bidak putih yang dimakan hitam
-var pendingPromo = null;
-
-var mode = "offline";
-var myColor = "w";
-var peer = null;
-var conn = null;
-var myRoom = "";
-var currentUser = "";
-var isLogin = false;
-
-function inside(r, c) {
-  return r >= 0 && r < 8 && c >= 0 && c < 8;
-}
-
-// =====================================================
-// 2. SUARA
-// =====================================================
-function playSound(type) {
-  try {
-    var a = new (window.AudioContext || window.webkitAudioContext)();
-    var o = a.createOscillator();
-    var g = a.createGain();
-    o.connect(g);
-    g.connect(a.destination);
-    if (type == "eat") o.frequency.value = 200;
-    else if (type == "win") o.frequency.value = 800;
-    else if (type == "revive") o.frequency.value = 1000;
-    else o.frequency.value = 500;
-    o.type = "sine";
-    g.gain.value = 0.2;
-    o.start();
-    o.stop(a.currentTime + (type == "win" ? 0.6 : 0.15));
-  } catch (e) {}
-}
-
-// =====================================================
-// 3. LOGIN / DAFTAR - SIMPAN DI HP
-// =====================================================
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem("catur_users") || "{}"); }
-  catch (e) { return {}; }
-}
-function saveUsers(u) {
-  localStorage.setItem("catur_users", JSON.stringify(u));
-}
-function getSkor(n) {
-  try { return JSON.parse(localStorage.getItem("catur_skor_" + n) || '{"win":0,"main":0}'); }
-  catch (e) { return { win: 0, main: 0 }; }
-}
-function saveSkor(n, s) {
-  localStorage.setItem("catur_skor_" + n, JSON.stringify(s));
-}
-function updateBar() {
-  var s = getSkor(currentUser);
-  document.getElementById("haloUser").innerHTML = "Halo, " + currentUser + " 👋";
-  document.getElementById("avatarHuruf").innerHTML = currentUser.charAt(0).toUpperCase();
-  document.getElementById("skorUser").innerHTML = "🏆 Menang: " + s.win + " | Main: " + s.main;
-}
-function doDaftar() {
-  var n = document.getElementById("userName").value.trim();
-  var p = document.getElementById("userPass").value.trim();
-  if (!n || !p) {
-    document.getElementById("loginMsg").innerHTML = "Isi nama + password dulu!";
-    return;
-  }
-  var u = getUsers();
-  if (u[n]) {
-    document.getElementById("loginMsg").innerHTML = "Nama udah ada, tinggal Login aja!";
-    return;
-  }
-  u[n] = p;
-  saveUsers(u);
-  saveSkor(n, { win: 0, main: 0 });
-  document.getElementById("loginMsg").innerHTML = "Berhasil daftar! Sekarang pencet Login!";
-}
-function doLogin() {
-  var n = document.getElementById("userName").value.trim();
-  var p = document.getElementById("userPass").value.trim();
-  var u = getUsers();
-  if (!u[n]) {
-    document.getElementById("loginMsg").innerHTML = "Akun belum ada, pencet Daftar dulu!";
-    return;
-  }
-  if (u[n] != p) {
-    document.getElementById("loginMsg").innerHTML = "Password salah! Coba lagi!";
-    return;
-  }
-  currentUser = n;
-  isLogin = true;
-  localStorage.setItem("catur_login", n);
-  document.getElementById("loginBox").classList.add("hide");
-  document.getElementById("userBar").classList.remove("hide");
-  document.getElementById("menu").classList.remove("hide");
-  updateBar();
-  document.getElementById("turn").innerHTML = "Selamat Datang, " + n + "!";
-  document.getElementById("msg").innerHTML = "Pilih mode main di bawah!";
-  draw();
-}
-function doLogout() {
-  localStorage.removeItem("catur_login");
-  location.reload();
-}
-var saved = localStorage.getItem("catur_login");
-if (saved) {
-  document.getElementById("userName").value = saved;
-  document.getElementById("userPass").value = getUsers()[saved] || "";
-}
-
-// =====================================================
-// 4. ANIMASI MENANG + CONFETTI
-// =====================================================
-function startConfetti() {
-  var colors = ["#ffcc00", "#ff5555", "#22c55e", "#3b82f6", "#ff00ff", "#ffffff"];
-  for (var i = 0; i < 100; i++) {
-    var d = document.createElement("div");
-    d.className = "confetti";
-    d.style.left = Math.random() * 100 + "vw";
-    d.style.background = colors[i % colors.length];
-    d.style.animationDuration = (Math.random() * 2 + 2) + "s";
-    d.style.animationDelay = (Math.random() * 0.8) + "s";
-    document.body.appendChild(d);
-    (function(el) {
-      setTimeout(function() { el.remove(); }, 4000);
-    })(d);
-  }
-}
-function
+var ICON={wK:"♔",wQ:"♕",wR:"♖",wB:"♗",wN:"♘",wP:"♙",bK:"♚",bQ:"♛",bR:"♜",bB:"♝",bN:"♞",bP:"♟"};
+var NAMES={Q:"Ratu",R:"Benteng",B:"Gajah",N:"Kuda"};
+var board=[["bR","bN","bB","bQ","bK","bB","bN","bR"],["bP","bP","bP","bP","bP","bP","bP","bP"],["","","","","","","",""],["","","","","","","",""],["","","","","","","",""],["","","","","","","",""],["wP","wP","wP","wP","wP","wP","wP","wP"],["wR","wN","wB","wQ","wK","wB","wN","wR"]];
+var turn="w",selR=-1,selC=-1,moves=[],gameOver=false,historyArr=[],timeLeft=600,timerOn=false,capturedW=[],capturedB=[],pendingPromo=null;
+var mode="offline",myColor="w",peer=null,conn=null,myRoom="",currentUser="",isLogin=false;
+function inside(r,c){return r>=0&&r<8&&c>=0&&c<8}
+function snd(t){try{var a=new(window.AudioContext||window.webkitAudioContext)();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=t=="eat"?200:t=="revive"?1000:500;o.start();o.stop(a.currentTime+0.15);}catch(e){}}
+function getUsers(){try{return JSON.parse(localStorage.getItem("catur_users")||"{}")}catch(e){return{}}}
+function getSkor(n){try{return JSON.parse(localStorage.getItem("catur_skor_"+n)||'{"win":0,"main":0}')}catch(e){return{win:0,main:0}}}
+function updateBar(){var s=getSkor(currentUser);document.getElementById("haloUser").innerHTML="Halo, "+currentUser;document.getElementById("skorUser").innerHTML="🏆 Menang: "+s.win+" | Main: "+s.main;}
+function doDaftar(){var n=document.getElementById("userName").value.trim();var p=document.getElementById("userPass").value.trim();if(!n||!p){document.getElementById("loginMsg").innerHTML="Isi nama + password!";return}var u=getUsers();if(u[n]){document.getElementById("loginMsg").innerHTML="Udah ada, Login aja!";return}u[n]=p;localStorage.setItem("catur_users",JSON.stringify(u));localStorage.setItem("catur_skor_"+n,JSON.stringify({win:0,main:0}));document.getElementById("loginMsg").innerHTML="Berhasil! Pencet Login!";}
+function doLogin(){var n=document.getElementById("userName").value.trim();var p=document.getElementById("userPass").value.trim();var u=getUsers();if(!u[n]){document.getElementById("loginMsg").innerHTML="Belum ada, Daftar dulu!";return}if(u[n]!=p){document.getElementById("loginMsg").innerHTML="Password salah!";return}currentUser=n;isLogin=true;localStorage.setItem("catur_login",n);document.getElementById("loginBox").classList.add("hide");document.getElementById("userBar").classList.remove("hide");document.getElementById("menu").classList.remove("hide");updateBar();document.getElementById("msg").innerHTML="Pilih mode main!";draw();}
+var saved=localStorage.getItem("catur_login");if(saved){document.getElementById("userName").value=saved;document.getElementById("userPass").value=getUsers()[saved]||"";}
+function showWin(t){document.getElementById("winText").innerHTML=t;document.getElementById("winBox").classList.add("show");snd("revive");}
+function getMovesFor(r,c,col){var code=board[r][c];if(!code)return[];var ty=code[1];var m=[];
+function add(rr,cc){if(!inside(rr,cc))return;var t=board[rr][cc];if(t=="")m.push([rr,cc]);else if(t[0]!=col)m.push([rr,cc]);}
+function slide(dirs){for(var i=0;i<dirs.length;i++){var dr=dirs[i][0],dc=dirs[i][1],rr=r+dr,cc=c+dc;while(inside(rr,cc)){var t=board[rr][cc];if(t=="")m.push([rr,cc]);else{if(t[0]!=col)m.push([rr,cc]);break;}rr+=dr;cc+=dc;}}}
+if(ty=="P"){var dir=col=="w"?-1:1,st=col=="w"?6:1;if(inside(r+dir,c)&&board[r+dir][c]==""){m.push([r+dir,c]);if(r==st&&board[r+dir*2][c]=="")m.push([r+dir*2,c]);}for(var k=-1;k<=1;k+=2){var rr2=r+dir,cc2=c+k;if(inside(rr2,cc2)){var t2=board[rr2][cc2];if(t2!=""&&t2[0]!=col)m.push([rr2,cc2]);}}}
+if(ty=="N"){var kn=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]];for(var j=0;j<kn.length;j++)add(r+kn[j][0],c+kn[j][1]);}
+if(ty=="B"||ty=="Q")slide([[1,1],[1,-1],[-1,1],[-1,-1]]);
+if(ty=="R"||ty=="Q")slide([[1,0],[-1,0],[0,1],[0,-1]]);
+if(ty=="K"){for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){if(dr!=0||dc!=0)add(r+dr,c+dc);}}
+return m;}
+function isInCheck(col){var kr=-1,kc=-1;for(var r=0;r<8;r++)for(var c=0;c<8;c++){if(board[r][c]==col+"K"){kr=r;kc=c;}}if(kr==-1)return false;var en=col=="w"?"b":"w";for(var r=0;r<8;r++)for(var c=0;c<8;c++){var p=board[r][c];if(p!=""&&p[0]==en){var ms=getMovesFor(r,c,en);for(var i=0;i<ms.length;i++){if(ms[i][0]==kr&&ms[i][1]==kc)return true;}}}return false;}
+function checkWin(){var hasW=false,hasB=false;for(var r=0;r<8;r++)for(var c=0;c<8;c++){if(board[r][c]=="wK")hasW=true;if(board[r][c]=="bK")hasB=true;}if(!hasW){gameOver=true;showWin("HITAM MENANG!! 🏆");return true;}if(!hasB){gameOver=true;showWin("PUTIH MENANG!! 🏆");if(currentUser){var s=getSkor(currentUser);s.win++;localStorage.setItem("catur_skor_"+currentUser,JSON.stringify(s));}return true;}document.getElementById("checkInfo").innerHTML=isInCheck(turn)?"⚠️ CHECK!":"";return false;}
+function draw(){var html="";var cp=null;if(isInCheck(turn)){for(var r=0;r<8;r++)for(var c=0;c<8;c++){if(board[r][c]==turn+"K")cp=[r,c];}}for(var r=0;r<8;r++){var rr=(mode=="online"&&myColor=="b")?7-r:r;html+='<div class="row">';for(var c=0;c<8;c++){var cc=(mode=="online"&&myColor=="b")?7-c:c;var code=board[rr][cc];var cls="cell "+(((rr+cc)%2==0)?"w":"b");if(cp&&cp[0]==rr&&cp[1]==cc)cls="cell check";if(selR==rr&&selC==cc)cls="cell sel";for(var i=0;i<moves.length;i++){if(moves[i][0]==rr&&moves[i][1]==cc){cls=board[rr][cc]==""?"cell dot":"cell eat";}}var pc="",sym="";if(code!=""){sym=ICON[code];pc=code[0]=="w"?" pW":" pB";}html+='<div class="'+cls+pc+'" onclick="clickCell('+rr+','+cc+')">'+sym+'</div>';}html+='</div>';}document.getElementById("board").innerHTML=html;document.getElementById("trayW").innerHTML=capturedW.length?capturedW.map(function(x){return ICON[x]}).join(" "):"-";document.getElementById("trayB").innerHTML=capturedB.length?capturedB.map(function(x){return ICON[x]}).join(" "):"-";if(mode=="offline")document.getElementById("turn").innerHTML="Giliran: "+(turn=="w"?"Putih ⚪":"Hitam ⚫");else document.getElementById("turn").innerHTML="Kamu: "+(myColor=="w"?"Putih":"Hitam")+" | Giliran: "+(turn=="w"?"Putih":"Hitam");}
+function openPromo(color,tr,tc){pendingPromo={tr:tr,tc:tc,color:color};document.getElementById("promoTitle").innerHTML="Pion "+(color=="w"?"Putih":"Hitam")+" sampe ujung!";var list=document.getElementById("reviveList");list.innerHTML="";var dead=color=="w"?capturedB:capturedW;var seen={};dead.forEach(function(code){if(code[1]=="K"||code[1]=="P")return;if(seen[code])return;seen[code]=1;var b=document.createElement("button");b.className="reviveBtn";b.innerHTML="✨ Hidupin "+ICON[code]+" "+NAMES[code[1]];b.onclick=(function(c){return function(){chooseRevive(c)}})(code);list.appendChild(b);});document.getElementById("noRevive").innerHTML=list.innerHTML==""?"Gak ada yg mati, jadi Ratu aja!":"Pion hilang, diganti bidak hidup!";document.getElementById("promoBox").classList.add("show");}
+function finishPromo(newCode,isRevive,reviveCode){var p=pendingPromo;if(!p)return;board[p.tr][p.tc]=newCode;if(isRevive){var arr=p.color=="w"?capturedB:capturedW;var ix=arr.indexOf(reviveCode);if(ix>=0)arr.splice(ix,1);document.getElementById("msg").innerHTML="✨ "+ICON[newCode]+" HIDUP LAGI!";snd("revive");}document.getElementById("promoBox").classList.remove("show");pendingPromo=null;if(conn&&conn.open&&mode=="online")conn.send({promo:newCode,tr:p.tr,tc:p.tc,revive:isRevive,reviveCode:reviveCode});selR=-1;selC=-1;moves=[];turn=turn=="w"?"b":"w";draw();checkWin();}
+function choosePromo(t){if(!pendingPromo)return;finishPromo(pendingPromo.color+t,false,null);}
+function chooseRevive(code){if(!pendingPromo)return;finishPromo(code,true,code);}
+function doMove(fr,fc,tr,tc,send){if(gameOver||pendingPromo)return;var target=board[tr][tc];var mover=board[fr][fc];var isEat=target!="";if(isEat){if(target[0]=="b")capturedW.push(target);else capturedB.push(target);}board[tr][tc]=mover;board[fr][fc]="";var isPromo=(mover=="wP"&&tr==0)||(mover=="bP"&&tr==7);historyArr.push(ICON[mover]+" "+String.fromCharCode(97+fc)+(8-fr)+" → "+String.fromCharCode(97+tc)+(8-tr)+(isEat?" (Makan)":""));document.getElementById("historyText").innerHTML=historyArr.join(" | ");document.getElementById("msg").innerHTML=isEat?"Makan!":"Mantap!";snd(isEat?"eat":"move");if(send&&conn&&conn.open)conn.send({fr:fr,fc:fc,tr:tr,tc:tc});if(isPromo){openPromo(mover[0],tr,tc);draw();return;}selR=-1;selC=-1;moves=[];turn=turn=="w"?"b":"w";draw();checkWin();}
+function clickCell(r,c){if(pendingPromo){document.getElementById("msg").innerHTML="Pilih dulu pion mau jadi apa!";return;}if(gameOver)return;if(mode=="online"&&turn!=myColor){document.getElementById("msg").innerHTML="Bukan giliran kamu!";return;}var p=board[r][c];var isT=false;for(var i=0;i<moves.length;i++){if(moves[i][0]==r&&moves[i][1]==c)isT=true;}if(selR>=0&&isT){doMove(selR,selC,r,c,true);}else if(p!=""&&p[0]==turn){selR=r;selC=c;moves=getMovesFor(r,c,turn);document.getElementById("msg").innerHTML="Pilih kotak hijau / merah!";}else{selR=-1;selC=-1;moves=[];}draw();}
+function startTimer(){if(timerOn)return;timerOn=true;setInterval(function(){if(gameOver)return;timeLeft--;var mm=Math.floor(timeLeft/60);var ss=timeLeft%60;document.getElementById("timer").innerHTML="⏱️ "+mm+":"+(ss<10?"0":"")+ss;},1000);}
+function startOffline(){mode="offline";document.getElementById("menu").classList.add("hide");document.getElementById("msg").innerHTML="Main berdua 1 HP!";startTimer();draw();}
+function showOnline(){document.getElementById("onlineBox").classList.remove("hide");}
+function handlePromo(d){board[d.tr][d.tc]=d.promo;if(d.revive){var arr=d.promo[0]=="w"?capturedB:capturedW;var ix=arr.indexOf(d.reviveCode);if(ix>=0)arr.splice(ix,1);}pendingPromo=null;turn=turn=="w"?"b":"w";draw();checkWin();}
+function createRoom(){myRoom="catur-"+Math.floor(Math.random()*90000+10000);myColor="w";mode="online";peer=new Peer(myRoom);peer.on("open",function(){document.getElementById("roomInfo").innerHTML="Kode: <b>"+myRoom+"</b>";document.getElementById("menu").classList.add("hide");startTimer();draw();});peer.on("connection",function(c){conn=c;conn.on("data",function(d){if(d.promo)handlePromo(d);else doMove(d.fr,d.fc,d.tr,d.tc,false);});});}
+function joinRoom(){var code=document.getElementById("roomInput").value.trim();if(!code){alert("Masukin kode!");return;}myColor="b";mode="online";peer=new Peer();peer.on("open",function(){conn=peer.connect(code);conn.on("open",function(){document.getElementById("menu").classList.add("hide");startTimer();draw();});conn.on("data",function(d){if(d.promo)handlePromo(d);else doMove(d.fr,d.fc,d.tr,d.tc,false);});});}
+function copyLink(){var link=location.href.split("?")[0]+"?room="+myRoom;if(navigator.clipboard)navigator.clipboard.writeText(link);alert("Link tersalin:\n"+link);}
+var q=new URLSearchParams(location.search);if(q.get("room")){document.getElementById("onlineBox").classList.remove("hide");document.getElementById("roomInput").value=q.get("room");}
+draw();
+</script>
+</body></html>
