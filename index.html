@@ -3,29 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAMN - Catur</title>
+<title>DAMN - Catur Summon Pas Sampai</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#0f1115;color:#fff;font-family:Arial;text-align:center;padding:15px}
-h1{font-size:42px;letter-spacing:10px;margin:5px} p{color:#aaa}
-.card{background:#1a1d24;border:1px solid #333;border-radius:16px;padding:18px;max-width:460px;margin:15px auto}
-button{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
+*{box-sizing:border-box} body{margin:0;background:#0f1115;color:#fff;font-family:Arial;text-align:center;padding:12px}
+h1{font-size:38px;letter-spacing:10px;margin:5px} p{color:#aaa}
+.card{background:#1a1d24;border:1px solid #333;border-radius:16px;padding:16px;max-width:480px;margin:12px auto}
+button{width:100%;padding:13px;border:none;border-radius:10px;font-weight:bold;font-size:15px;margin-top:8px;cursor:pointer}
 .btn-green{background:#00c853;color:#fff} .btn-blue{background:#2e6bff;color:#fff} .btn-dark{background:#222;color:#fff;border:1px solid #444}
-input{width:100%;padding:13px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;text-align:center;font-size:18px}
-#board{display:grid;grid-template-columns:repeat(8,1fr);gap:0;max-width:400px;margin:12px auto;border:2px solid #444}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;user-select:none}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;text-align:center;font-size:18px}
+#board{display:grid;grid-template-columns:repeat(8,1fr);max-width:400px;margin:10px auto;border:2px solid #444}
+.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer}
 .light{background:#ebecd0;color:#000} .dark{background:#739552;color:#000}
-.sel{outline:3px solid yellow;z-index:1} .can{outline:3px solid #00ff00 inset;box-shadow:inset 0 0 0 3px #00ff00}
+.sel{outline:3px solid yellow} .can{box-shadow:inset 0 0 0 3px #00ff00}
 .hidden{display:none}
+.grave{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:40px;background:#111;padding:8px;border-radius:10px;margin-top:8px}
+.grave span{font-size:28px;background:#222;padding:4px 10px;border-radius:8px;border:2px solid transparent}
+.summonBox{background:#2a2200;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin-top:10px}
+.summonBox button{width:60px;font-size:30px;background:#222;color:#fff;border:1px solid #555;margin:4px}
 </style>
 </head>
 <body>
-<h1>DAMN</h1><p>Catur - Offline & Online</p>
+<h1>DAMN</h1><p>Catur - Summon Pas Sampai Garis Musuh</p>
 
 <div id="menu" class="card">
-<button class="btn-green" onclick="startOffline()">📱 OFFLINE - Catur Berdua 1 HP</button>
-<button class="btn-blue" onclick="showOnline()">🌐 ONLINE - Catur Beda HP</button>
-<p style="font-size:13px">Offline: lu & teman gantian di HP yang sama. Pasti jalan!</p>
+<button class="btn-green" onclick="startOffline()">📱 OFFLINE - Berdua 1 HP</button>
+<button class="btn-blue" onclick="showOnline()">🌐 ONLINE - Beda HP</button>
 </div>
 
 <div id="onlineMenu" class="card hidden">
@@ -41,88 +44,128 @@ input{width:100%;padding:13px;border-radius:10px;border:1px solid #444;backgroun
 <div id="game" class="card hidden">
 <h3 id="status">Giliran: Putih</h3>
 <div id="board"></div>
+
+<div id="summonBox" class="summonBox hidden">
+<p style="color:#ffcc00;margin:0">🔥 PION LU UDAH SAMPE GARIS PERTAMA MUSUH!</p>
+<p style="font-size:13px">Waktunya SUMMON! Pilih 1 bidak yang dilingkar yang udah mati buat gantiin pion ini:</p>
+<div id="summonChoices"></div>
+<button class="btn-dark" onclick="skipSummon()">Gak mau summon - Pion tetap pion</button>
+</div>
+
+<p>☠️ Kuburan Putih - Yang dilingkar aja:</p>
+<div id="graveW" class="grave"></div>
+<p>☠️ Kuburan Hitam:</p>
+<div id="graveB" class="grave"></div>
+<p style="color:#ffcc00;font-size:13px;line-height:1.7">🔥 ATURAN FINAL:<br>✅ Summon CUMA WAKTU pion lu BARU SAMPE garis pertama musuh (baris merah)<br>✅ Yang bisa di-summon CUMA yang dilingkar: ♖ ♘ ♗ ♕ - dan harus UDAH MATI<br>❌ Kalo gak ada yang mati, GAK BISA summon, pion tetap pion - biar GAK DUPE<br>❌ Gak ada promosi jadi Ratu baru<br>Putih summon: <span id="usedW">Belum</span> | Hitam: <span id="usedB">Belum</span></p>
 <p id="roomInfo"></p>
-<p style="font-size:13px">Cara main: Klik bidak lu, terus klik kotak tujuan yang hijau.</p>
-<button class="btn-dark" onclick="location.reload()">Keluar / Menu Utama</button>
+<button class="btn-dark" onclick="location.reload()">Keluar / Menu</button>
 </div>
 
 <script>
-let mode="offline", peer, conn, myCode="", myColor="w", selected=null;
-let board = [
-["r","n","b","q","k","b","n","r"],
-["p","p","p","p","p","p","p","p"],
-["","","","","","","",""],
-["","","","","","","",""],
-["","","","","","","",""],
-["","","","","","","",""],
-["P","P","P","P","P","P","P","P"],
-["R","N","B","Q","K","B","N","R"]
-];
+let mode="offline", peer, conn, myCode="", myColor="w", selected=null, pendingSummon=null;
+let board=[
+["r","n","b","q","k","b","n","r"],["p","p","p","p","p","p","p","p"],
+["","","","","","","",""],["","","","","","","",""],
+["","","","","","","",""],["","","","","","","",""],
+["P","P","P","P","P","P","P","P"],["R","N","B","Q","K","B","N","R"]];
 let turn="w";
+let graveW=[], graveB=[];
+let usedSummonW=false, usedSummonB=false;
 let emoji={P:"♙",R:"♖",N:"♘",B:"♗",Q:"♕",K:"♔",p:"♟",r:"♜",n:"♞",b:"♝",q:"♛",k:"♚"};
-
 function isWhite(p){return p && p===p.toUpperCase();}
-function startOffline(){mode="offline"; document.getElementById('menu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: OFFLINE - Berdua 1 HP"; render();}
+function isLingkar(p){ let t=p.toLowerCase(); return t=="r"||t=="n"||t=="b"||t=="q"; }
+function startOffline(){mode="offline"; document.getElementById('menu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: OFFLINE"; render();}
 function showOnline(){document.getElementById('menu').classList.add('hidden'); document.getElementById('onlineMenu').classList.remove('hidden');}
 function back(){document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('menu').classList.remove('hidden');}
-
 function render(){
   let b=document.getElementById('board'); b.innerHTML="";
   let moves = selected ? legalMoves(selected[0],selected[1]) : [];
   for(let r=0;r<8;r++) for(let c=0;c<8;c++){
     let d=document.createElement('div'); d.className='cell '+((r+c)%2==0?'light':'dark');
-    d.innerText = board[r][c] ? emoji[board[r][c]] : "";
+    d.innerText=board[r][c]?emoji[board[r][c]]:"";
+    if(turn=="w" && r==0) d.style.borderTop="3px solid red";
+    if(turn=="b" && r==7) d.style.borderBottom="3px solid red";
     if(selected && selected[0]==r && selected[1]==c) d.classList.add('sel');
     if(moves.some(m=>m[0]==r&&m[1]==c)) d.classList.add('can');
     d.onclick=()=>klik(r,c); b.appendChild(d);
   }
-  document.getElementById('status').innerText = "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online" ? " | Lu: "+(myColor=="w"?"Putih":"Hitam") : "");
+  document.getElementById('status').innerText = pendingSummon ? "🔥 SUMMON! Pilih bidak mati di kotak kuning!" : "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online"?" | Lu: "+(myColor=="w"?"Putih":"Hitam"):"");
+  document.getElementById('usedW').innerText = usedSummonW?"SUDAH ❌":"Belum ✅";
+  document.getElementById('usedB').innerText = usedSummonB?"SUDAH ❌":"Belum ✅";
+  let gw=document.getElementById('graveW'); gw.innerHTML=""; if(graveW.length==0) gw.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati - Gak bisa summon</span>";
+  graveW.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.style.opacity=.25; gw.appendChild(s); });
+  let gb=document.getElementById('graveB'); gb.innerHTML=""; if(graveB.length==0) gb.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati - Gak bisa summon</span>";
+  graveB.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.style.opacity=.25; gb.appendChild(s); });
 }
 function klik(r,c){
+  if(pendingSummon) return alert("Pilih dulu summon di kotak kuning! Gak bisa jalanin bidak lain dulu.");
   if(mode=="online" && turn!==myColor) return;
   let p=board[r][c];
   if(selected){
     let moves=legalMoves(selected[0],selected[1]);
     if(moves.some(m=>m[0]==r&&m[1]==c)){
-      board[r][c]=board[selected[0]][selected[1]]; board[selected[0]][selected[1]]="";
-      // promosi pion jadi ratu
-      if(board[r][c]=="P" && r==0) board[r][c]="Q";
-      if(board[r][c]=="p" && r==7) board[r][c]="q";
-      turn=turn=="w"?"b":"w"; selected=null;
-      if(mode=="online" && conn) conn.send({board,turn});
-      render(); return;
+      let target=board[r][c];
+      if(target){ if(isWhite(target)) graveW.push(target); else graveB.push(target); }
+      let movedPiece=board[selected[0]][selected[1]];
+      board[r][c]=movedPiece; board[selected[0]][selected[1]]="";
+      selected=null;
+      // CEK: APAKAH PION BARU SAMPE GARIS PERTAMA MUSUH?
+      let sampaiGaris = (movedPiece=="P" && r==0) || (movedPiece=="p" && r==7);
+      if(sampaiGaris){
+        // Cek ada yang dilingkar yang mati gak? Dan belum pernah summon?
+        let grave = turn=="w" ? graveW : graveB;
+        let bisaSummon = grave.some(isLingkar) && ((turn=="w" && !usedSummonW) || (turn=="b" && !usedSummonB));
+        if(bisaSummon){
+          pendingSummon=[r,c]; showSummonChoices(); render(); return;
+        } else {
+          // Gak ada yang mati = gak bisa summon, pion tetap pion, giliran pindah
+          turn=turn=="w"?"b":"w"; sync(); render(); return;
+        }
+      }
+      turn=turn=="w"?"b":"w"; sync(); render(); return;
     }
   }
-  if(p && ((turn=="w" && isWhite(p)) || (turn=="b" && !isWhite(p)))) selected=[r,c];
-  else selected=null;
+  if(p && ((turn=="w" && isWhite(p)) || (turn=="b" && !isWhite(p)))) selected=[r,c]; else selected=null;
   render();
 }
+function showSummonChoices(){
+  let box=document.getElementById('summonBox'); box.classList.remove('hidden');
+  let grave = turn=="w" ? graveW : graveB;
+  let div=document.getElementById('summonChoices'); div.innerHTML="";
+  grave.forEach((p,i)=>{
+    if(!isLingkar(p)) return; // cuma yang dilingkar yang muncul
+    let btn=document.createElement('button'); btn.innerText=emoji[p]; btn.onclick=()=>doSummon(i); div.appendChild(btn);
+  });
+}
+function doSummon(graveIdx){
+  let [r,c]=pendingSummon;
+  let grave = turn=="w" ? graveW : graveB;
+  let summoned = grave[graveIdx];
+  // ANTI-DUPE: pion berubah jadi bidak mati, bidak mati dihapus dari kuburan
+  board[r][c]=summoned;
+  grave.splice(graveIdx,1);
+  if(turn=="w") usedSummonW=true; else usedSummonB=true;
+  pendingSummon=null; document.getElementById('summonBox').classList.add('hidden');
+  turn=turn=="w"?"b":"w"; sync(); render();
+}
+function skipSummon(){
+  pendingSummon=null; document.getElementById('summonBox').classList.add('hidden');
+  turn=turn=="w"?"b":"w"; sync(); render();
+}
+function sync(){ if(mode=="online" && conn) conn.send({board,turn,graveW,graveB,usedSummonW,usedSummonB}); }
 function inside(r,c){return r>=0&&r<8&&c>=0&&c<8;}
 function legalMoves(r,c){
   let p=board[r][c]; if(!p) return []; let res=[]; let w=isWhite(p); let type=p.toLowerCase();
   function add(rr,cc){ if(!inside(rr,cc)) return false; let t=board[rr][cc]; if(!t){res.push([rr,cc]); return true;} if(isWhite(t)!==w){res.push([rr,cc]);} return false; }
-  if(type=="p"){
-    let dir=w?-1:1, start=w?6:1;
-    if(inside(r+dir,c) && !board[r+dir][c]){res.push([r+dir,c]); if(r==start && !board[r+dir*2][c]) res.push([r+dir*2,c]);}
-    for(let dc of [-1,1]){ if(inside(r+dir,c+dc) && board[r+dir][c+dc] && isWhite(board[r+dir][c+dc])!==w) res.push([r+dir,c+dc]); }
-  }
+  if(type=="p"){ let dir=w?-1:1, start=w?6:1; if(inside(r+dir,c) && !board[r+dir][c]){res.push([r+dir,c]); if(r==start && !board[r+dir*2][c]) res.push([r+dir*2,c]);} for(let dc of [-1,1]){ if(inside(r+dir,c+dc) && board[r+dir][c+dc] && isWhite(board[r+dir][c+dc])!==w) res.push([r+dir,c+dc]); } }
   if(type=="n"){ for(let [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) add(r+dr,c+dc); }
   if(type=="b"||type=="q"){ for(let [dr,dc] of [[-1,-1],[-1,1],[1,-1],[1,1]]){ for(let k=1;k<8;k++){ if(!add(r+dr*k,c+dc*k)) break; } } }
   if(type=="r"||type=="q"){ for(let [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ for(let k=1;k<8;k++){ if(!add(r+dr*k,c+dc*k)) break; } } }
   if(type=="k"){ for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){ if(dr||dc) add(r+dr,c+dc); } }
   return res;
 }
-function buatRoom(){
-  myCode=Math.floor(1000+Math.random()*9000).toString();
-  peer=new Peer("damn-catur-"+myCode);
-  peer.on('open',()=>{ document.getElementById('onlineInfo').innerHTML="<b>Kode lu: "+myCode+"</b><br>Kirim ke teman, tunggu dia masuk..."; });
-  peer.on('connection',(c)=>{ conn=c; myColor="w"; startOnlineGame(); c.on('data',(d)=>{board=d.board; turn=d.turn; render();}); });
-}
-function masukRoom(){
-  let code=document.getElementById('joinCode').value; if(!code) return alert("Isi kode dulu!");
-  peer=new Peer();
-  peer.on('open',()=>{ conn=peer.connect("damn-catur-"+code); conn.on('open',()=>{ myColor="b"; startOnlineGame(); }); conn.on('data',(d)=>{board=d.board; turn=d.turn; render();}); setTimeout(()=>{if(!conn.open) alert("Kode salah / Host belum buat room!");},5000); });
-}
+function buatRoom(){ myCode=Math.floor(1000+Math.random()*9000).toString(); peer=new Peer("damn-catur-"+myCode); peer.on('open',()=>{document.getElementById('onlineInfo').innerHTML="<b>Kode lu: "+myCode+"</b>";}); peer.on('connection',(c)=>{conn=c; myColor="w"; startOnlineGame(); c.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; usedSummonW=d.usedSummonW; usedSummonB=d.usedSummonB; render();});}); }
+function masukRoom(){ let code=document.getElementById('joinCode').value; if(!code) return alert("Isi kode!"); peer=new Peer(); peer.on('open',()=>{conn=peer.connect("damn-catur-"+code); conn.on('open',()=>{myColor="b"; startOnlineGame();}); conn.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; usedSummonW=d.usedSummonW; usedSummonB=d.usedSummonB; render();}); setTimeout(()=>{if(!conn.open) alert("Kode salah!");},5000);}); }
 function startOnlineGame(){ mode="online"; document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: ONLINE - Kode: "+(myCode||document.getElementById('joinCode').value)+" | Lu: "+(myColor=="w"?"Putih":"Hitam"); render(); }
 </script>
 </body>
