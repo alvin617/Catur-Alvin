@@ -2,106 +2,123 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CATUR RAJA - FINAL LENGKAP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAMN - Main Bareng</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#0f0f0f;color:white;font-family:Arial;text-align:center;padding-bottom:20px}
-h1{margin:10px 0 2px;font-size:24px;color:#FFD700} .sub{font-size:12px;color:#aaa}
-#menu{background:#222;margin:10px auto;padding:15px;width:92%;max-width:430px;border-radius:14px;border:1px solid #444}
-#menu button{padding:13px 18px;font-size:16px;margin:5px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
-.btn-buat{background:#00ff88} .btn-join{background:#FFD700}
-#kodeBox{font-size:36px;letter-spacing:10px;color:#FFD700;font-weight:bold;margin:10px}
-input{padding:12px;font-size:16px;border-radius:10px;border:none;text-align:center;width:130px;letter-spacing:6px}
-.roundPick button{padding:10px 14px;margin:3px;border:2px solid #555;background:#333;color:white;border-radius:10px;font-weight:bold;cursor:pointer}
-.roundPick button.selected{background:#FFD700;color:black;border-color:#FFD700}
-#info{margin:5px auto;padding:10px;background:#222;border-radius:12px;width:92%;max-width:430px;border:1px solid #444}
-#timerBox{display:flex;justify-content:space-between;max-width:430px;margin:5px auto;width:92%;font-weight:bold}
-.timer{background:#333;padding:8px 12px;border-radius:10px} .timer.active{background:#00ff88;color:black}
-#score{font-size:16px;font-weight:bold;color:#FFD700;margin:5px}
-#roundInfo{font-size:16px;font-weight:bold;background:#FFD700;color:black;padding:8px 12px;border-radius:10px;display:inline-block;margin:5px}
-#check{color:#ff4444;font-weight:bold;min-height:20px} #captured{font-size:16px;min-height:22px}
-#board{display:grid;grid-template-columns:repeat(8,1fr);width:96vw;max-width:430px;margin:10px auto;border:4px solid #fff;border-radius:8px;overflow:hidden}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;position:relative}
-.white{background:#eeeed2} .black{background:#769656}
-.sel{background:#f7f769 !important} .can{background:#7dd87d !important}
-.can::after{content:'';width:14px;height:14px;background:rgba(0,0,0,0.3);border-radius:50%;position:absolute}
-.checkKing{background:#ff4444 !important}
-.btnRow button{padding:10px 14px;margin:4px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
-.btnResign{background:#ff4444;color:white} .btnRematch{background:#00ff88} .btnKeluar{background:#555;color:white}
-#chat{max-width:430px;width:92%;margin:10px auto;background:#222;border-radius:12px;padding:10px;text-align:left;border:1px solid #444}
-#chatBox{height:100px;overflow-y:auto;background:#111;padding:8px;border-radius:8px;font-size:13px;margin-bottom:8px}
-#chatInput{width:70%;padding:10px;border-radius:8px;border:none} #chatSend{background:#FFD700;padding:10px 14px;border:none;border-radius:8px;font-weight:bold}
-#modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:99}
-#modalBox{background:#222;padding:20px;border-radius:14px;max-width:90%}
-#modalBox button{font-size:36px;padding:10px 16px;margin:5px;border:none;border-radius:10px;cursor:pointer;background:#fff}
-#modalBox .btnOk{font-size:16px;background:#00ff88;padding:12px 20px;font-weight:bold}
-.hidden{display:none}
+  *{box-sizing:border-box} body{margin:0;background:#0f1115;color:white;font-family:Arial;text-align:center;padding:20px}
+  h1{font-size:42px;letter-spacing:8px;margin:10px 0 0} p{color:#aaa}
+  .card{background:#1a1d24;border:1px solid #333;border-radius:16px;padding:20px;max-width:400px;margin:20px auto}
+  button{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
+  .btn-blue{background:#2e6bff;color:white} .btn-green{background:#00c853;color:white} .btn-dark{background:#222;color:white;border:1px solid #444}
+  input{width:100%;padding:14px;border-radius:10px;border:1px solid #444;background:#111;color:white;text-align:center;font-size:20px;letter-spacing:4px}
+  #board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:15px auto}
+  .cell{aspect-ratio:1;background:#222;border-radius:10px;font-size:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .hidden{display:none}
 </style>
 </head>
 <body>
-<h1>♞ CATUR RAJA ♞</h1><div class="sub">FINAL LENGKAP • ONLINE • By Alvin</div>
-<div id="menu">
-<b>1. PILIH JUMLAH RONDE:</b><br>
-<div class="roundPick"><button onclick="pilihRonde(1,this)" class="selected">1 RONDE</button><button onclick="pilihRonde(3,this)">3 RONDE</button><button onclick="pilihRonde(5,this)">5 RONDE</button></div>
-<p style="font-size:12px;color:#aaa">1 Ronde = Sekali menang juara<br>3 Ronde = Menang 2x juara | 5 Ronde = Menang 3x juara</p>
-<b>2. PILIH MODE:</b><br><button class="btn-buat" onclick="buatRoom()">🟢 BUAT ROOM</button><button class="btn-join" onclick="showJoin()">🔵 JOIN ROOM</button>
-<div id="buatArea" class="hidden"><p>Kode Room Lu:</p><div id="kodeBox">....</div><p id="statusBuat">Membuat room...</p><p id="infoRondeBuat" style="color:#FFD700;font-weight:bold"></p></div>
-<div id="joinArea" class="hidden"><p>Masukin Kode Temen Lu:</p><input id="inputKode" placeholder="4821" maxlength="4"><br><br><button class="btn-join" onclick="joinRoom()">MASUK</button><p id="statusJoin"></p></div></div>
+<h1>DAMN</h1>
+<p>Main Bareng - Offline & Online</p>
 
-<div id="gameArea" class="hidden">
-<div id="roundInfo">RONDE 1 / 1</div>
-<div id="score">SKOR: LU 0 - 0 TEMEN LU</div>
-<div id="timerBox"><div class="timer" id="timerW">PUTIH: 10:00</div><div class="timer" id="timerB">HITAM: 10:00</div></div>
-<div id="info">Lu: <span id="myColor">-</span> | Giliran: <span id="turn">PUTIH ⚪</span><br><span id="msg">Klik bidak lu</span><div id="check"></div><div id="captured">Bidak dimakan: -</div></div>
-<div id="board"></div>
-<div class="btnRow"><button class="btnRematch" onclick="mintaRematch()">🔄 REMATCH</button><button class="btnResign" onclick="menyerah()">🏳️ MENYERAH</button><button class="btnKeluar" onclick="location.reload()">❌ KELUAR</button></div>
-<div id="chat"><b>💬 CHAT</b><div id="chatBox"></div><input id="chatInput" placeholder="Ketik ledekan..."><button id="chatSend" onclick="kirimChat()">KIRIM</button></div>
+<div id="menu" class="card">
+  <button class="btn-green" onclick="startOffline()">📱 OFFLINE - Main Berdua 1 HP</button>
+  <button class="btn-blue" onclick="showOnline()">🌐 ONLINE - Main Beda HP</button>
+  <p style="font-size:13px">Offline paling gampang, langsung main!</p>
 </div>
 
-<div id="modal"><div id="modalBox"><div id="modalContent"></div></div></div>
+<div id="onlineMenu" class="card hidden">
+  <p>Nama Kamu</p><input id="myName" placeholder="Contoh: Alvin" style="letter-spacing:1px">
+  <button class="btn-blue" onclick="buatRoom()">Buat Room</button>
+  <hr style="border-color:#333">
+  <p>Kode Room Teman</p><input id="joinCode" placeholder="1234" maxlength="4">
+  <button class="btn-dark" onclick="masukRoom()">Masuk Room</button>
+  <button class="btn-dark" onclick="back()">← Kembali</button>
+  <p id="onlineInfo"></p>
+</div>
+
+<div id="game" class="card hidden">
+  <h3 id="status">Giliran: X</h3>
+  <div id="board"></div>
+  <p id="roomInfo"></p>
+  <button class="btn-dark" onclick="location.reload()">Keluar / Menu Utama</button>
+</div>
 
 <script>
-let peer=null, conn=null, myColor='w', turn='w', sel=null, board=[], timeW=600, timeB=600, timerInt=null, capturedW=[], capturedB=[], scoreMe=0, scoreEnemy=0, lastDouble=null, movedKing={w:false,b:false}, movedRook={w0:false,w7:false,b0:false,b7:false}, pendingPromo=null, gameOver=false;
-let totalRonde=1, rondeSekarang=1;
-let awal=[['r','n','b','q','k','b','n','r'],['p','p','p','p','p','p','p','p'],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['P','P','P','P','P','P','P','P'],['R','N','B','Q','K','B','N','R']];
-let simbol={p:'♟',r:'♜',n:'♞',b:'♝',q:'♛',k:'♚',P:'♙',R:'♖',N:'♘',B:'♗',Q:'♕',K:'♔'};
-let boardEl=document.getElementById('board'), turnEl=document.getElementById('turn'), msgEl=document.getElementById('msg');
-function pilihRonde(n,el){ totalRonde=n; document.querySelectorAll('.roundPick button').forEach(b=>b.classList.remove('selected')); el.classList.add('selected'); }
-function sound(f){ try{ let c=new (window.AudioContext||window.webkitAudioContext)(); let o=c.createOscillator(); o.frequency.value=f; o.connect(c.destination); o.start(); setTimeout(()=>o.stop(),90);}catch(e){} }
-function showModal(html){ document.getElementById('modalContent').innerHTML=html; document.getElementById('modal').style.display='flex'; }
-function hideModal(){ document.getElementById('modal').style.display='none'; }
-function addChat(nama,teks){ let b=document.getElementById('chatBox'); b.innerHTML+='<div><b>'+nama+':</b> '+teks+'</div>'; b.scrollTop=b.scrollHeight; }
-function kirimChat(){ let inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; addChat('Lu',inp.value); if(conn&&conn.open) conn.send({type:'chat',teks:inp.value}); inp.value=''; }
-function buatRoom(){ document.getElementById('buatArea').classList.remove('hidden'); document.getElementById('joinArea').classList.add('hidden'); let kode=Math.floor(1000+Math.random()*9000).toString(); document.getElementById('kodeBox').textContent=kode; document.getElementById('infoRondeBuat').textContent='Mode: '+totalRonde+' RONDE - Kirim kode ini ke temen lu'; myColor='w'; peer=new Peer('catur-final-'+kode+'-r'+totalRonde); peer.on('open',()=>{ document.getElementById('statusBuat').textContent='Room jadi! Mode '+totalRonde+' Ronde'; }); peer.on('connection',(c)=>{ conn=c; setupConn(); startGame(); }); }
-function showJoin(){ document.getElementById('joinArea').classList.remove('hidden'); document.getElementById('buatArea').classList.add('hidden'); }
-function joinRoom(){ let kode=document.getElementById('inputKode').value.trim(); if(kode.length!=4){ document.getElementById('statusJoin').textContent='Kode harus 4 angka!'; return; } document.getElementById('statusJoin').textContent='Nyari room...'; myColor='b'; peer=new Peer(); peer.on('open',()=>{ let coba=[1,3,5], idx=0; let tryConnect=()=>{ if(idx>=3){ document.getElementById('statusJoin').textContent='Kode salah / Room gak ketemu! Coba tanya host kode nya.'; return; } totalRonde=coba[idx]; let c=peer.connect('catur-final-'+kode+'-r'+totalRonde); let timeout=setTimeout(()=>{ idx++; tryConnect(); },1500); c.on('open',()=>{ clearTimeout(timeout); conn=c; setupConn(); }); }; tryConnect(); }); }
-function setupConn(){ conn.on('open',()=>{ startGame(); }); conn.on('data',(d)=>{ if(d.type=='move'){ board=d.board; turn=d.turn; capturedW=d.capturedW; capturedB=d.capturedB; timeW=d.timeW; timeB=d.timeB; lastDouble=d.lastDouble; movedKing=d.movedKing; movedRook=d.movedRook; scoreMe=d.scoreEnemy; scoreEnemy=d.scoreMe; sel=null; draw(); checkCheck(); cekAkhir(false); } if(d.type=='chat') addChat('Temen',d.teks); if(d.type=='resign'){ handleWin('me','Temen lu menyerah!'); } if(d.type=='rematch'){ if(confirm('Temen lu ngajak REMATCH! Terima?')){ conn.send({type:'rematch-ok'}); doRematch(); } } if(d.type=='rematch-ok') doRematch(); if(d.type=='nextRound'){ rondeSekarang=d.ronde; updateRoundUI(); resetGame(); addChat('SYSTEM','🔥 Ronde '+rondeSekarang+' dimulai!'); } if(d.type=='syncScore'){ scoreMe=d.scoreEnemy; scoreEnemy=d.scoreMe; updateScore(); } }); }
-function startGame(){ document.getElementById('menu').classList.add('hidden'); document.getElementById('gameArea').classList.remove('hidden'); document.getElementById('myColor').textContent=myColor=='w'?'PUTIH ⚪ (Jalan Duluan)':'HITAM ⚫'; rondeSekarang=1; scoreMe=0; scoreEnemy=0; updateRoundUI(); updateScore(); resetGame(); startTimer(); }
-function updateRoundUI(){ document.getElementById('roundInfo').textContent='RONDE '+rondeSekarang+' / '+totalRonde+' • Butuh '+Math.ceil(totalRonde/2)+'x menang buat JUARA'; }
-function doRematch(){ scoreMe=0; scoreEnemy=0; rondeSekarang=1; gameOver=false; updateRoundUI(); updateScore(); resetGame(); addChat('SYSTEM','🔄 Rematch dimulai dari Ronde 1!'); }
-function mintaRematch(){ if(conn&&conn.open) conn.send({type:'rematch'}); alert('Udah ngirim ajakan rematch!'); }
-function menyerah(){ if(confirm('Yakin mau menyerah ronde ini?')){ if(conn&&conn.open) conn.send({type:'resign'}); handleWin('enemy','Lu menyerah!'); } }
-function handleWin(pemenang, alasan){ if(gameOver) return; let menangGue=pemenang=='me'; let butuh=Math.ceil(totalRonde/2); if(menangGue) scoreMe++; else scoreEnemy++; gameOver=true; updateScore(); if(conn&&conn.open) conn.send({type:'syncScore', scoreMe:scoreMe, scoreEnemy:scoreEnemy}); if(scoreMe>=butuh){ showModal('<h2>🏆 LU JUARA! 🏆</h2><p>'+alasan+'</p><p>Skor akhir: '+scoreMe+' - '+scoreEnemy+'</p><button class="btnOk" onclick="hideModal(); doRematch();">🔄 MAIN LAGI</button>'); return; } if(scoreEnemy>=butuh){ showModal('<h2>😭 TEMEN LU JUARA</h2><p>'+alasan+'</p><p>Skor akhir: '+scoreMe+' - '+scoreEnemy+'</p><button class="btnOk" onclick="hideModal(); doRematch();">🔄 BALAS DENDAM</button>'); return; } showModal('<h2>'+(menangGue?'🎉 LU MENANG RONDE '+rondeSekarang:'😭 LU KALAH RONDE '+rondeSekarang)+'</h2><p>'+alasan+'</p><p>Skor: '+scoreMe+' - '+scoreEnemy+'</p><button class="btnOk" onclick="hideModal(); lanjutRonde();">➡️ LANJUT RONDE '+(rondeSekarang+1)+'</button>'); }
-function lanjutRonde(){ rondeSekarang++; gameOver=false; updateRoundUI(); resetGame(); if(conn&&conn.open) conn.send({type:'nextRound', ronde:rondeSekarang}); }
-function updateScore(){ document.getElementById('score').textContent='SKOR: LU '+scoreMe+' - '+scoreEnemy+' TEMEN LU'; }
-function startTimer(){ if(timerInt) clearInterval(timerInt); timerInt=setInterval(()=>{ if(gameOver) return; if(turn=='w'){ timeW--; if(timeW<=0){ handleWin(myColor=='b'?'me':'enemy','Waktu Putih habis!'); } } else { timeB--; if(timeB<=0){ handleWin(myColor=='w'?'me':'enemy','Waktu Hitam habis!'); } } updateTimer(); },1000); }
-function updateTimer(){ let f=(s)=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); document.getElementById('timerW').textContent='PUTIH: '+f(Math.max(0,timeW)); document.getElementById('timerB').textContent='HITAM: '+f(Math.max(0,timeB)); document.getElementById('timerW').className='timer '+(turn=='w'?'active':''); document.getElementById('timerB').className='timer '+(turn=='b'?'active':''); }
-function resetGame(){ board=JSON.parse(JSON.stringify(awal)); turn='w'; sel=null; capturedW=[]; capturedB=[]; timeW=600; timeB=600; lastDouble=null; movedKing={w:false,b:false}; movedRook={w0:false,w7:false,b0:false,b7:false}; gameOver=false; draw(); updateTimer(); }
-function isWhite(p){ return p>='A'&&p<='Z'; }
-function findKing(c, b=board){ for(let y=0;y<8;y++) for(let x=0;x<8;x++) if(b[y][x]==(c=='w'?'K':'k')) return {x,y}; return null; }
-function isInCheck(c, b=board){ let k=findKing(c,b); if(!k) return false; for(let y=0;y<8;y++) for(let x=0;x<8;x++){ let p=b[y][x]; if(p && isWhite(p)!=(c=='w')){ if(bisaJalanRaw(x,y,k.x,k.y,b)) return true; } } return false; }
-function adaJalanSah(c){ for(let y1=0;y1<8;y1++) for(let x1=0;x1<8;x1++){ let p=board[y1][x1]; if(p && isWhite(p)==(c=='w')){ for(let y2=0;y2<8;y2++) for(let x2=0;x2<8;x2++){ if(bisaJalan(x1,y1,x2,y2)) return true; } } } return false; }
-function cekAkhir(fromMe){ if(gameOver) return; if(isInCheck(turn) && !adaJalanSah(turn)){ handleWin(myColor!=(turn=='w'?'w':'b')?'me':'enemy','CHECKMATE! Raja '+(turn=='w'?'Putih':'Hitam')+' mati!'); } else if(!isInCheck(turn) && !adaJalanSah(turn)){ showModal('<h2>🤝 SERI / STALEMATE!</h2><p>Gak ada jalan lagi!</p><button class="btnOk" onclick="hideModal(); lanjutRonde();">➡️ LANJUT RONDE</button>'); gameOver=true; } }
-function checkCheck(){ let el=document.getElementById('check'); if(isInCheck(turn)){ el.textContent='⚠️ CHECK! Raja '+(turn=='w'?'PUTIH':'HITAM')+' terancam!'; sound(500); } else el.textContent=''; }
-function draw(){ boardEl.innerHTML=''; let rows=myColor=='w'?[0,1,2,3,4,5,6,7]:[7,6,5,4,3,2,1,0]; let cols=myColor=='w'?[0,1,2,3,4,5,6,7]:[7,6,5,4,3,2,1,0]; let kingPos=findKing(turn); let inCheck=isInCheck(turn); for(let yi=0;yi<8;yi++) for(let xi=0;xi<8;xi++){ let y=rows[yi], x=cols[xi]; let d=document.createElement('div'); d.className='cell '+((x+y)%2==0?'white':'black'); d.textContent=simbol[board[y][x]]||''; d.style.color=isWhite(board[y][x])?'#fff':'#000'; d.style.textShadow='0 0 3px #000'; if(sel&&sel.x==x&&sel.y==y) d.classList.add('sel'); if(sel&&bisaJalan(sel.x,sel.y,x,y)) d.classList.add('can'); if(inCheck&&kingPos&&kingPos.x==x&&kingPos.y==y) d.classList.add('checkKing'); d.onclick=()=>klik(x,y); boardEl.appendChild(d); } turnEl.textContent=turn=='w'?'PUTIH ⚪':'HITAM ⚫'; document.getElementById('captured').textContent='Bidak dimakan: '+(capturedW.concat(capturedB).map(c=>simbol[c]).join(' ')||'-'); }
-function klik(x,y){ if(gameOver){ msgEl.textContent='Ronde selesai! Pencet Lanjut Ronde.'; return; } if((turn=='w')!=(myColor=='w')){ msgEl.textContent='Bukan giliran lu!'; return; } let p=board[y][x]; if(sel==null){ if(!p) return; if((turn=='w')!=isWhite(p)){ msgEl.textContent='Itu bidak lawan!'; return; } sel={x,y}; draw(); return; } if(sel.x==x&&sel.y==y){ sel=null; draw(); return; } if(p&&isWhite(p)==(turn=='w')){ sel={x,y}; draw(); return; } if(bisaJalan(sel.x,sel.y,x,y)){ jalankan(sel.x,sel.y,x,y); } else msgEl.textContent='Gak bisa jalan ke sana!'; }
-function jalankan(x1,y1,x2,y2){ let moving=board[y1][x1]; let target=board[y2][x2]; if(moving.toLowerCase()=='p' && !target && x1!=x2){ target=board[y1][x2]; board[y1][x2]=''; } if(moving.toLowerCase()=='k' && Math.abs(x2-x1)==2){ if(x2==6){ board[y1][5]=board[y1][7]; board[y1][7]=''; } else { board[y1][3]=board[y1][0]; board[y1][0]=''; } } if(target){ if(isWhite(target)) capturedW.push(target); else capturedB.push(target); sound(200); } else sound(800); board[y2][x2]=moving; board[y1][x1]=''; if(moving.toLowerCase()=='k') movedKing[turn]=true; if(moving.toLowerCase()=='r'){ if(y1==0&&x1==0) movedRook.b0=true; if(y1==0&&x1==7) movedRook.b7=true; if(y1==7&&x1==0) movedRook.w0=true; if(y1==7&&x1==7) movedRook.w7=true; } lastDouble=null; if(moving.toLowerCase()=='p' && Math.abs(y2-y1)==2) lastDouble={x:x2,y:y2}; if((moving=='P'&&y2==0)||(moving=='p'&&y2==7)){ pendingPromo={x:x2,y:y2,piece:moving}; showModal('<b>PION LU SAMPE UJUNG!<br>Pilih mau jadi apa:</b><br><br><button onclick="pilihPromo(\'Q\')">'+(moving=='P'?'♕':'♛')+'</button><button onclick="pilihPromo(\'R\')">'+(moving=='P'?'♖':'♜')+'</button><button onclick="pilihPromo(\'B\')">'+(moving=='P'?'♗':'♝')+'</button><button onclick="pilihPromo(\'N\')">'+(moving=='P'?'♘':'♞')+'</button><br><span style="font-size:12px;color:#aaa">Ratu - Benteng - Gajah - Kuda</span>'); return; } selesaiJalan(); }
-function pilihPromo(pilih){ let pp=pendingPromo; let finalPiece = pp.piece=='P'? pilih : pilih.toLowerCase(); board[pp.y][pp.x]=finalPiece; hideModal(); pendingPromo=null; selesaiJalan(); }
-function selesaiJalan(){ sel=null; turn=turn=='w'?'b':'w'; draw(); checkCheck(); updateTimer(); cekAkhir(true); if(conn&&conn.open) conn.send({type:'move',board:board,turn:turn,capturedW:capturedW,capturedB:capturedB,timeW:timeW,timeB:timeB,lastDouble:lastDouble,movedKing:movedKing,movedRook:movedRook,scoreMe:scoreMe,scoreEnemy:scoreEnemy}); }
-function bisaJalan(x1,y1,x2,y2){ if(!bisaJalanRaw(x1,y1,x2,y2,board)) return false; let temp=board[y2][x2]; let moving=board[y1][x1]; let tempEP=null; if(moving.toLowerCase()=='p' && !temp && x1!=x2){ tempEP=board[y1][x2]; board[y1][x2]=''; } board[y2][x2]=moving; board[y1][x1]=''; let inCheck=isInCheck(turn,board); board[y1][x1]=moving; board[y2][x2]=temp; if(tempEP) board[y1][x2]=tempEP; return !inCheck; }
-function bisaJalanRaw(x1,y1,x2,y2,b=board){ let p=b[y1][x1]; let dx=x2-x1,dy=y2-y1; let adx=Math.abs(dx),ady=Math.abs(dy); let target=b[y2][x2]; if(target&&isWhite(target)==isWhite(p)) return false; let type=p.toLowerCase(); let isW=isWhite(p); if(type=='p'){ let arah=isW?-1:1; if(dx==0&&dy==arah&&!target) return true; if(dx==0&&dy==2*arah&&!target&&((isW&&y1==6)||(!isW&&y1==1))&&!b[y1+arah][x1]) return true; if(adx==1&&dy==arah&&target) return true; if(adx==1&&dy==arah&&!target&&lastDouble&&lastDouble.x==x2&&lastDouble.y==y1) return true; return false; } if(type=='r') return (dx==0||dy==0)&&jalanBersih(x1,y1,x2,y2,b); if(type=='n') return (adx==1&&ady==2)||(adx==2&&ady==1); if(type=='b') return adx==ady&&jalanBersih(x1,y1,x2,y2,b); if(type=='q') return ((dx==0||dy==0)||adx==ady)&&jalanBersih(x1,y1,x2,y2,b); if(type=='k'){ if(adx<=1&&ady<=1) return true; if(!movedKing[turn] && dy==0 && adx==2){ let y=y1; if(x2==6){ if(movedRook[turn=='w'?'w7':'b7']) return false; if(b[y][5]||b[y][6]) return false; if(b[y][7]!=(turn=='w'?'R':'r')) return false; return true; } if(x2==2){ if(movedRook[turn=='w'?'w0':'b0']) return false; if(b[y][1]||b[y][2]||b[y][3]) return false; if(b[y][0]!=(turn=='w'?'R':'r')) return false; return true; } } return false; } return false; }
-function jalanBersih(x1,y1,x2,y2,b=board){ let sx=Math.sign(x2-x1),sy=Math.sign(y2-y1); let x=x1+sx,y=y1+sy; while(x!=x2||y!=y2){ if(b[y][x]!='') return false; x+=sx; y+=sy; } return true; }
+let board = ["","","","","","","","",""];
+let turn = "X";
+let mode = "offline";
+let peer, conn, myCode = "";
+let isHost = false;
+let myTurnOnline = "X";
+
+function startOffline(){
+  mode="offline"; document.getElementById('menu').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  document.getElementById('roomInfo').innerText = "Mode: OFFLINE - Gantian di 1 HP";
+  render();
+}
+function showOnline(){
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('onlineMenu').classList.remove('hidden');
+}
+function back(){
+  document.getElementById('onlineMenu').classList.add('hidden');
+  document.getElementById('menu').classList.remove('hidden');
+}
+function render(){
+  let b = document.getElementById('board'); b.innerHTML="";
+  board.forEach((v,i)=>{
+    let d=document.createElement('div'); d.className='cell'; d.innerText=v;
+    d.onclick=()=>klik(i); b.appendChild(d);
+  });
+  document.getElementById('status').innerText = cekMenang() ? "Menang: "+cekMenang() : "Giliran: "+turn;
+}
+function klik(i){
+  if(board[i]!="" || cekMenang()) return;
+  if(mode==="online" && turn!==myTurnOnline) return alert("Bukan giliran lu!");
+  board[i]=turn;
+  if(mode==="online" && conn) conn.send({board, turn});
+  turn = turn==="X"?"O":"X";
+  render();
+}
+function cekMenang(){
+  let w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for(let p of w){ if(board[p[0]] && board[p[0]]===board[p[1]] && board[p[1]]===board[p[2]]) return board[p[0]]; }
+  return null;
+}
+function buatRoom(){
+  let name=document.getElementById('myName').value||"Host";
+  myCode = Math.floor(1000+Math.random()*9000).toString();
+  peer = new Peer("damn-"+myCode);
+  peer.on('open', ()=>{
+    isHost=true; myTurnOnline="X";
+    document.getElementById('onlineInfo').innerHTML="<b>Kode lu: "+myCode+"</b><br>Kirim ke teman lu, tunggu dia masuk...";
+  });
+  peer.on('connection', (c)=>{
+    conn=c; startOnlineGame();
+    c.on('data', (d)=>{ board=d.board; turn=d.turn; render(); });
+  });
+}
+function masukRoom(){
+  let code=document.getElementById('joinCode').value;
+  let name=document.getElementById('myName').value||"Tamu";
+  if(!code) return alert("Isi kode dulu!");
+  peer = new Peer();
+  peer.on('open', ()=>{
+    conn = peer.connect("damn-"+code);
+    conn.on('open', ()=>{ myTurnOnline="O"; startOnlineGame(); });
+    conn.on('data', (d)=>{ board=d.board; turn=d.turn; render(); });
+    setTimeout(()=>{ if(!conn.open) alert("Kode salah / Host belum buat room!"); }, 5000);
+  });
+}
+function startOnlineGame(){
+  mode="online";
+  document.getElementById('onlineMenu').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  document.getElementById('roomInfo').innerText = "Mode: ONLINE - Kode: "+(myCode||document.getElementById('joinCode').value)+" | Lu adalah: "+myTurnOnline;
+  render();
+}
 </script>
 </body>
-</html>
+  </html>
