@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAMN - Catur Summon Tombol</title>
+<title>DAMN - Summon Unlimited</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 *{box-sizing:border-box} body{margin:0;background:#0f1115;color:#fff;font-family:Arial;text-align:center;padding:12px}
@@ -26,7 +26,7 @@ input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;backgroun
 </style>
 </head>
 <body>
-<h1>DAMN</h1><p>Catur - Summon Pake Tombol</p>
+<h1>DAMN</h1><p>Catur - Summon Unlimited</p>
 
 <div id="menu" class="card">
 <button class="btn-green" onclick="startOffline()">📱 OFFLINE - Berdua 1 HP</button>
@@ -49,7 +49,7 @@ input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;backgroun
 
 <div id="summonBox" class="summonBox hidden">
 <p style="color:#ffcc00;margin:0;font-weight:bold">🔥 PION LU ADA DI GARIS 1 MUSUH!</p>
-<p style="font-size:13px">Pilih bidak yang mau lu hidupin. Yang abu-abu = belum mati / gak bisa.</p>
+<p style="font-size:13px">Yang terang = bidak gede lu yang udah mati, bisa di-summon. Yang gelap = belum mati, gak bisa.</p>
 <div class="summonGrid">
 <button class="btn-summon" id="btnR" onclick="pilihSummonBtn('R')">♖ BENTENG</button>
 <button class="btn-summon" id="btnN" onclick="pilihSummonBtn('N')">♘ KUDA</button>
@@ -60,11 +60,11 @@ input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;backgroun
 <button class="btn-dark" onclick="cancelSummon()">Batal Summon</button>
 </div>
 
-<p>☠️ Kuburan Putih (cuma liat aja):</p>
+<p>☠️ Kuburan Putih:</p>
 <div id="graveW" class="grave"></div>
-<p>☠️ Kuburan Hitam (cuma liat aja):</p>
+<p>☠️ Kuburan Hitam:</p>
 <div id="graveB" class="grave"></div>
-<p style="color:#ffcc00;font-size:13px;line-height:1.7">🔥 ATURAN FINAL:<br>✅ TUMBAL: CUMA PION ♙, harus di GARIS 1 MUSUH<br>❌ Kuda & Gajah GAK BISA jadi tumbal<br>✅ SUMMON: CUMA ♖ ♘ ♗ ♕ yang UDAH MATI<br>✅ Putih & Hitam masing-masing bisa summon 1x, gak saling ganggu<br>Putih: <span id="usedW">Belum</span> | Hitam: <span id="usedB">Belum</span></p>
+<p style="color:#ffcc00;font-size:13px;line-height:1.7">🔥 ATURAN FINAL:<br>✅ SUMMON TAK TERBATAS! Bisa berkali-kali<br>✅ TUMBAL: CUMA PION ♙ di GARIS 1 MUSUH<br>✅ SUMMON CUMA BISA KALO ADA BIDAK GEDE YANG MATI: ♖ ♘ ♗ ♕<br>❌ Kalo yang mati cuma Pion, GAK BISA summon!<br>❌ Kuda & Gajah GAK BISA jadi tumbal</p>
 <p id="roomInfo"></p>
 <button class="btn-dark" onclick="location.reload()">Keluar / Menu</button>
 </div>
@@ -78,23 +78,29 @@ let board=[
 ["P","P","P","P","P","P","P","P"],["R","N","B","Q","K","B","N","R"]];
 let turn="w";
 let graveW=[], graveB=[];
-let usedSummonW=false, usedSummonB=false;
 let emoji={P:"♙",R:"♖",N:"♘",B:"♗",Q:"♕",K:"♔",p:"♟",r:"♜",n:"♞",b:"♝",q:"♛",k:"♚"};
 function isWhite(p){return p && p===p.toUpperCase();}
 function isPawn(p){ return p && p.toLowerCase()=="p"; }
+// BIDAK GEDE = yang dilingkar, yang bisa di-summon
+function isGede(p){ let t=p.toLowerCase(); return t=="r"||t=="n"||t=="b"||t=="q"; }
 function isOnEnemyLine(r, color){ return color=="w" ? r==0 : r==7; }
 function hasPawnOnEnemyLine(color){
   for(let c=0;c<8;c++){ let r=color=="w"?0:7; let b=board[r][c]; if(b && isPawn(b) && ((color=="w" && isWhite(b)) || (color=="b" && !isWhite(b)))) return true; }
   return false;
 }
+// YANG PALING PENTING: Cek ada bidak gede yang mati gak?
+function hasGedeMati(color){
+  let grave = color=="w" ? graveW : graveB;
+  return grave.some(p=>isGede(p));
+}
 function startOffline(){mode="offline"; document.getElementById('menu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: OFFLINE"; render();}
 function showOnline(){document.getElementById('menu').classList.add('hidden'); document.getElementById('onlineMenu').classList.remove('hidden');}
 function back(){document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('menu').classList.remove('hidden');}
 function updateSummonBox(){
-  let show = hasPawnOnEnemyLine(turn) && !((turn=="w" && usedSummonW) || (turn=="b" && usedSummonB));
+  // Kotak muncul cuma kalo: Pion di garis musuh DAN ada bidak gede yang mati
+  let show = hasPawnOnEnemyLine(turn) && hasGedeMati(turn);
   let box = document.getElementById('summonBox');
   if(show) box.classList.remove('hidden'); else if(!summonPiece) box.classList.add('hidden');
-  // Tombol nyala cuma kalo bidak itu ada di kuburan lu sendiri
   let grave = turn=="w" ? graveW : graveB;
   let map = {R:'btnR', N:'btnN', B:'btnB', Q:'btnQ'};
   for(let k in map){
@@ -117,23 +123,20 @@ function render(){
     if(summonPiece && isOnEnemyLine(r, turn) && isPawn(board[r][c])) d.style.outline="3px solid #ffcc00";
     d.onclick=()=>klik(r,c); b.appendChild(d);
   }
-  document.getElementById('status').innerText = summonPiece ? "🔥 MODE SUMMON: Klik PION lu yang di GARIS MERAH!" : "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online"?" | Lu: "+(myColor=="w"?"Putih":"Hitam"):"") + (hasPawnOnEnemyLine(turn) ? " | 🔥 PION LU DI GARIS MUSUH, BISA SUMMON!" : "");
-  document.getElementById('usedW').innerText = usedSummonW?"SUDAH ❌":"Belum ✅";
-  document.getElementById('usedB').innerText = usedSummonB?"SUDAH ❌":"Belum ✅";
+  document.getElementById('status').innerText = summonPiece ? "🔥 MODE SUMMON: Klik PION lu yang di GARIS MERAH!" : "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online"?" | Lu: "+(myColor=="w"?"Putih":"Hitam"):"") + (hasPawnOnEnemyLine(turn) ? (hasGedeMati(turn) ? " | 🔥 PION LU DI GARIS MUSUH, BISA SUMMON!" : " | Pion di garis musuh, tapi gak ada bidak gede yang mati") : "");
   let gw=document.getElementById('graveW'); gw.innerHTML=""; if(graveW.length==0) gw.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati</span>";
   graveW.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; gw.appendChild(s); });
   let gb=document.getElementById('graveB'); gb.innerHTML=""; if(graveB.length==0) gb.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati</span>";
   graveB.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; gb.appendChild(s); });
   updateSummonBox();
 }
-// FIX: Gak perlu klik kuburan lagi, langsung klik tombol
 function pilihSummonBtn(type){
   if(mode=="online" && turn!==myColor) return alert("Bukan giliran lu!");
-  if((turn=="w" && usedSummonW) || (turn=="b" && usedSummonB)) return alert("Lu udah summon 1x! Yang ini giliran lawan, bukan lu.");
   if(!hasPawnOnEnemyLine(turn)) return alert("Pion lu belum di GARIS 1 MUSUH!");
+  if(!hasGedeMati(turn)) return alert("GAK BISA! Belum ada bidak gede lu yang mati. Summon cuma bisa kalo Benteng/Kuda/Gajah/Ratu lu ada yang mati.");
   let grave = turn=="w" ? graveW : graveB;
   let idx = grave.findIndex(p=>p.toLowerCase()==type.toLowerCase());
-  if(idx==-1) return alert("Bidak itu belum mati! Gak bisa di-summon.");
+  if(idx==-1) return alert("Bidak gede itu belum mati! Gak bisa di-summon.");
   summonPiece = turn=="w" ? type.toUpperCase() : type.toLowerCase();
   summonIdx = idx; selected=null; render();
 }
@@ -144,11 +147,11 @@ function klik(r,c){
     let p=board[r][c];
     if(!p) return alert("Klik PION lu yang di garis merah!");
     if((turn=="w" && !isWhite(p)) || (turn=="b" && isWhite(p))) return alert("Itu bidak lawan!");
-    if(!isPawn(p)) return alert("GAK BISA! Yang bisa berkorban CUMA PION! Kuda & Gajah GAK BISA.");
+    if(!isPawn(p)) return alert("GAK BISA! Yang bisa berkorban CUMA PION!");
     if(!isOnEnemyLine(r, turn)) return alert("Pion ini belum di GARIS 1 MUSUH!");
     board[r][c]=summonPiece;
     if(turn=="w") graveW.splice(summonIdx,1); else graveB.splice(summonIdx,1);
-    if(turn=="w") usedSummonW=true; else usedSummonB=true;
+    // TAK TERBATAS, gak ada yang di-block, langsung ganti giliran
     summonPiece=null;
     turn=turn=="w"?"b":"w"; sync(); render(); return;
   }
@@ -166,7 +169,7 @@ function klik(r,c){
   if(p && ((turn=="w" && isWhite(p)) || (turn=="b" && !isWhite(p)))) selected=[r,c]; else selected=null;
   render();
 }
-function sync(){ if(mode=="online" && conn) conn.send({board,turn,graveW,graveB,usedSummonW,usedSummonB}); }
+function sync(){ if(mode=="online" && conn) conn.send({board,turn,graveW,graveB}); }
 function inside(r,c){return r>=0&&r<8&&c>=0&&c<8;}
 function legalMoves(r,c){
   let p=board[r][c]; if(!p) return []; let res=[]; let w=isWhite(p); let type=p.toLowerCase();
@@ -178,8 +181,8 @@ function legalMoves(r,c){
   if(type=="k"){ for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){ if(dr||dc) add(r+dr,c+dc); } }
   return res;
 }
-function buatRoom(){ myCode=Math.floor(1000+Math.random()*9000).toString(); peer=new Peer("damn-catur-"+myCode); peer.on('open',()=>{document.getElementById('onlineInfo').innerHTML="<b>Kode lu: "+myCode+"</b>";}); peer.on('connection',(c)=>{conn=c; myColor="w"; startOnlineGame(); c.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; usedSummonW=d.usedSummonW; usedSummonB=d.usedSummonB; render();});}); }
-function masukRoom(){ let code=document.getElementById('joinCode').value; if(!code) return alert("Isi kode!"); peer=new Peer(); peer.on('open',()=>{conn=peer.connect("damn-catur-"+code); conn.on('open',()=>{myColor="b"; startOnlineGame();}); conn.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; usedSummonW=d.usedSummonW; usedSummonB=d.usedSummonB; render();}); setTimeout(()=>{if(!conn.open) alert("Kode salah!");},5000);}); }
+function buatRoom(){ myCode=Math.floor(1000+Math.random()*9000).toString(); peer=new Peer("damn-catur-"+myCode); peer.on('open',()=>{document.getElementById('onlineInfo').innerHTML="<b>Kode lu: "+myCode+"</b>";}); peer.on('connection',(c)=>{conn=c; myColor="w"; startOnlineGame(); c.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; render();});}); }
+function masukRoom(){ let code=document.getElementById('joinCode').value; if(!code) return alert("Isi kode!"); peer=new Peer(); peer.on('open',()=>{conn=peer.connect("damn-catur-"+code); conn.on('open',()=>{myColor="b"; startOnlineGame();}); conn.on('data',(d)=>{board=d.board; turn=d.turn; graveW=d.graveW; graveB=d.graveB; render();}); setTimeout(()=>{if(!conn.open) alert("Kode salah!");},5000);}); }
 function startOnlineGame(){ mode="online"; document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: ONLINE - Kode: "+(myCode||document.getElementById('joinCode').value)+" | Lu: "+(myColor=="w"?"Putih":"Hitam"); render(); }
 </script>
 </body>
