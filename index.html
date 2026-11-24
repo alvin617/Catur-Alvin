@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAMN - Catur Summon Pas Sampai</title>
+<title>DAMN - Catur Tumbal Cuma Pion</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 *{box-sizing:border-box} body{margin:0;background:#0f1115;color:#fff;font-family:Arial;text-align:center;padding:12px}
@@ -18,13 +18,14 @@ input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;backgroun
 .sel{outline:3px solid yellow} .can{box-shadow:inset 0 0 0 3px #00ff00}
 .hidden{display:none}
 .grave{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:40px;background:#111;padding:8px;border-radius:10px;margin-top:8px}
-.grave span{font-size:28px;background:#222;padding:4px 10px;border-radius:8px;border:2px solid transparent}
+.grave span{font-size:28px;background:#222;padding:4px 10px;border-radius:8px;cursor:pointer;border:2px solid transparent}
+.grave span.selDead{border-color:#ffcc00;background:#333}
+.grave span.locked{opacity:.25;cursor:not-allowed}
 .summonBox{background:#2a2200;border:2px solid #ffcc00;border-radius:12px;padding:12px;margin-top:10px}
-.summonBox button{width:60px;font-size:30px;background:#222;color:#fff;border:1px solid #555;margin:4px}
 </style>
 </head>
 <body>
-<h1>DAMN</h1><p>Catur - Summon Pas Sampai Garis Musuh</p>
+<h1>DAMN</h1><p>Catur - Tumbal Cuma Pion</p>
 
 <div id="menu" class="card">
 <button class="btn-green" onclick="startOffline()">📱 OFFLINE - Berdua 1 HP</button>
@@ -46,23 +47,22 @@ input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;backgroun
 <div id="board"></div>
 
 <div id="summonBox" class="summonBox hidden">
-<p style="color:#ffcc00;margin:0">🔥 PION LU UDAH SAMPE GARIS PERTAMA MUSUH!</p>
-<p style="font-size:13px">Waktunya SUMMON! Pilih 1 bidak yang dilingkar yang udah mati buat gantiin pion ini:</p>
-<div id="summonChoices"></div>
-<button class="btn-dark" onclick="skipSummon()">Gak mau summon - Pion tetap pion</button>
+<p style="color:#ffcc00;margin:0">🔥 PION LU ADA DI GARIS PERTAMA MUSUH!</p>
+<p style="font-size:13px">Klik 1 bidak yang dilingkar yang udah mati di kuburan, terus klik PION lu yang di garis merah itu!</p>
+<button class="btn-dark" onclick="cancelSummon()">Batal Summon</button>
 </div>
 
-<p>☠️ Kuburan Putih - Yang dilingkar aja:</p>
+<p>☠️ Kuburan Putih - Klik yang terang buat summon:</p>
 <div id="graveW" class="grave"></div>
 <p>☠️ Kuburan Hitam:</p>
 <div id="graveB" class="grave"></div>
-<p style="color:#ffcc00;font-size:13px;line-height:1.7">🔥 ATURAN FINAL:<br>✅ Summon CUMA WAKTU pion lu BARU SAMPE garis pertama musuh (baris merah)<br>✅ Yang bisa di-summon CUMA yang dilingkar: ♖ ♘ ♗ ♕ - dan harus UDAH MATI<br>❌ Kalo gak ada yang mati, GAK BISA summon, pion tetap pion - biar GAK DUPE<br>❌ Gak ada promosi jadi Ratu baru<br>Putih summon: <span id="usedW">Belum</span> | Hitam: <span id="usedB">Belum</span></p>
+<p style="color:#ffcc00;font-size:13px;line-height:1.7">🔥 ATURAN FINAL:<br>✅ TUMBAL: CUMA PION ♙ aja yang bisa berkorban, harus di GARIS 1 MUSUH<br>❌ Kuda ♘ & Gajah ♗ GAK BISA jadi tumbal!<br>✅ SUMMON: CUMA yang dilingkar: ♖ ♘ ♗ ♕ - dan harus UDAH MATI<br>❌ Kalo gak ada yang mati, GAK BISA summon - biar GAK DUPE<br>Putih: <span id="usedW">Belum</span> | Hitam: <span id="usedB">Belum</span></p>
 <p id="roomInfo"></p>
 <button class="btn-dark" onclick="location.reload()">Keluar / Menu</button>
 </div>
 
 <script>
-let mode="offline", peer, conn, myCode="", myColor="w", selected=null, pendingSummon=null;
+let mode="offline", peer, conn, myCode="", myColor="w", selected=null, summonPiece=null, summonColor=null, summonIdx=null;
 let board=[
 ["r","n","b","q","k","b","n","r"],["p","p","p","p","p","p","p","p"],
 ["","","","","","","",""],["","","","","","","",""],
@@ -74,6 +74,13 @@ let usedSummonW=false, usedSummonB=false;
 let emoji={P:"♙",R:"♖",N:"♘",B:"♗",Q:"♕",K:"♔",p:"♟",r:"♜",n:"♞",b:"♝",q:"♛",k:"♚"};
 function isWhite(p){return p && p===p.toUpperCase();}
 function isLingkar(p){ let t=p.toLowerCase(); return t=="r"||t=="n"||t=="b"||t=="q"; }
+// FIX FINAL: TUMBAL CUMA PION! Kuda & Gajah GAK BISA!
+function isPawn(p){ return p.toLowerCase()=="p"; }
+function isOnEnemyLine(r, color){ return color=="w" ? r==0 : r==7; }
+function hasPawnOnEnemyLine(color){
+  for(let c=0;c<8;c++){ let r=color=="w"?0:7; let b=board[r][c]; if(b && isPawn(b) && ((color=="w" && isWhite(b)) || (color=="b" && !isWhite(b)))) return true; }
+  return false;
+}
 function startOffline(){mode="offline"; document.getElementById('menu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: OFFLINE"; render();}
 function showOnline(){document.getElementById('menu').classList.add('hidden'); document.getElementById('onlineMenu').classList.remove('hidden');}
 function back(){document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('menu').classList.remove('hidden');}
@@ -87,70 +94,55 @@ function render(){
     if(turn=="b" && r==7) d.style.borderBottom="3px solid red";
     if(selected && selected[0]==r && selected[1]==c) d.classList.add('sel');
     if(moves.some(m=>m[0]==r&&m[1]==c)) d.classList.add('can');
+    if(summonPiece && isOnEnemyLine(r, turn) && isPawn(board[r][c])) d.style.outline="3px solid #ffcc00";
     d.onclick=()=>klik(r,c); b.appendChild(d);
   }
-  document.getElementById('status').innerText = pendingSummon ? "🔥 SUMMON! Pilih bidak mati di kotak kuning!" : "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online"?" | Lu: "+(myColor=="w"?"Putih":"Hitam"):"");
+  document.getElementById('status').innerText = summonPiece ? "🔥 MODE SUMMON: Klik PION lu yang di GARIS MERAH!" : "Giliran: "+(turn=="w"?"Putih ♙":"Hitam ♟") + (mode=="online"?" | Lu: "+(myColor=="w"?"Putih":"Hitam"):"") + (hasPawnOnEnemyLine(turn) ? " | 🔥 PION LU DI GARIS MUSUH, BISA SUMMON!" : "");
   document.getElementById('usedW').innerText = usedSummonW?"SUDAH ❌":"Belum ✅";
   document.getElementById('usedB').innerText = usedSummonB?"SUDAH ❌":"Belum ✅";
-  let gw=document.getElementById('graveW'); gw.innerHTML=""; if(graveW.length==0) gw.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati - Gak bisa summon</span>";
-  graveW.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.style.opacity=.25; gw.appendChild(s); });
-  let gb=document.getElementById('graveB'); gb.innerHTML=""; if(graveB.length==0) gb.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati - Gak bisa summon</span>";
-  graveB.forEach(p=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.style.opacity=.25; gb.appendChild(s); });
+  let gw=document.getElementById('graveW'); gw.innerHTML=""; if(graveW.length==0) gw.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati</span>";
+  graveW.forEach((p,i)=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.classList.add('locked'); s.onclick=()=>pilihSummon(p,'w',i); if(summonPiece==p && summonColor=='w') s.classList.add('selDead'); gw.appendChild(s); });
+  let gb=document.getElementById('graveB'); gb.innerHTML=""; if(graveB.length==0) gb.innerHTML="<span style='font-size:13px;color:#888'>Belum ada yang mati</span>";
+  graveB.forEach((p,i)=>{ let s=document.createElement('span'); s.innerText=emoji[p]; if(!isLingkar(p)) s.classList.add('locked'); s.onclick=()=>pilihSummon(p,'b',i); if(summonPiece==p && summonColor=='b') s.classList.add('selDead'); gb.appendChild(s); });
 }
+function pilihSummon(p,color,idx){
+  if(mode=="online" && turn!==myColor) return alert("Bukan giliran lu!");
+  if(color!==turn) return alert("Ini kuburan lawan! Klik kuburan lu sendiri.");
+  if((turn=="w" && usedSummonW) || (turn=="b" && usedSummonB)) return alert("Lu udah summon 1x!");
+  if(!isLingkar(p)) return alert("GAK BISA! Cuma yang dilingkar aja: Benteng/Kuda/Gajah/Ratu. Pion gak bisa di-summon!");
+  if(!hasPawnOnEnemyLine(turn)) return alert("GAK BISA! Pion lu belum ada di GARIS 1 MUSUH. Jalanin / kill pake PION lu sampe ujung musuh dulu (baris merah). Kuda/Gajah gak bisa jadi tumbal!");
+  summonPiece=p; summonColor=color; summonIdx=idx; selected=null;
+  document.getElementById('summonBox').classList.remove('hidden');
+  render();
+}
+function cancelSummon(){ summonPiece=null; document.getElementById('summonBox').classList.add('hidden'); render(); }
 function klik(r,c){
-  if(pendingSummon) return alert("Pilih dulu summon di kotak kuning! Gak bisa jalanin bidak lain dulu.");
   if(mode=="online" && turn!==myColor) return;
+  if(summonPiece){
+    let p=board[r][c];
+    if(!p) return alert("Klik PION lu yang di garis merah, bukan kotak kosong!");
+    if((turn=="w" && !isWhite(p)) || (turn=="b" && isWhite(p))) return alert("Itu bidak lawan!");
+    if(!isPawn(p)) return alert("GAK BISA! Yang bisa berkorban CUMA PION! Kuda & Gajah GAK BISA jadi tumbal.");
+    if(!isOnEnemyLine(r, turn)) return alert("Pion ini belum di GARIS 1 MUSUH! Klik pion lu yang di baris merah (yang kuning).");
+    board[r][c]=summonPiece;
+    if(summonColor=="w") graveW.splice(summonIdx,1); else graveB.splice(summonIdx,1);
+    if(turn=="w") usedSummonW=true; else usedSummonB=true;
+    summonPiece=null; document.getElementById('summonBox').classList.add('hidden');
+    turn=turn=="w"?"b":"w"; sync(); render(); return;
+  }
   let p=board[r][c];
   if(selected){
     let moves=legalMoves(selected[0],selected[1]);
     if(moves.some(m=>m[0]==r&&m[1]==c)){
       let target=board[r][c];
       if(target){ if(isWhite(target)) graveW.push(target); else graveB.push(target); }
-      let movedPiece=board[selected[0]][selected[1]];
-      board[r][c]=movedPiece; board[selected[0]][selected[1]]="";
+      board[r][c]=board[selected[0]][selected[1]]; board[selected[0]][selected[1]]="";
       selected=null;
-      // CEK: APAKAH PION BARU SAMPE GARIS PERTAMA MUSUH?
-      let sampaiGaris = (movedPiece=="P" && r==0) || (movedPiece=="p" && r==7);
-      if(sampaiGaris){
-        // Cek ada yang dilingkar yang mati gak? Dan belum pernah summon?
-        let grave = turn=="w" ? graveW : graveB;
-        let bisaSummon = grave.some(isLingkar) && ((turn=="w" && !usedSummonW) || (turn=="b" && !usedSummonB));
-        if(bisaSummon){
-          pendingSummon=[r,c]; showSummonChoices(); render(); return;
-        } else {
-          // Gak ada yang mati = gak bisa summon, pion tetap pion, giliran pindah
-          turn=turn=="w"?"b":"w"; sync(); render(); return;
-        }
-      }
       turn=turn=="w"?"b":"w"; sync(); render(); return;
     }
   }
   if(p && ((turn=="w" && isWhite(p)) || (turn=="b" && !isWhite(p)))) selected=[r,c]; else selected=null;
   render();
-}
-function showSummonChoices(){
-  let box=document.getElementById('summonBox'); box.classList.remove('hidden');
-  let grave = turn=="w" ? graveW : graveB;
-  let div=document.getElementById('summonChoices'); div.innerHTML="";
-  grave.forEach((p,i)=>{
-    if(!isLingkar(p)) return; // cuma yang dilingkar yang muncul
-    let btn=document.createElement('button'); btn.innerText=emoji[p]; btn.onclick=()=>doSummon(i); div.appendChild(btn);
-  });
-}
-function doSummon(graveIdx){
-  let [r,c]=pendingSummon;
-  let grave = turn=="w" ? graveW : graveB;
-  let summoned = grave[graveIdx];
-  // ANTI-DUPE: pion berubah jadi bidak mati, bidak mati dihapus dari kuburan
-  board[r][c]=summoned;
-  grave.splice(graveIdx,1);
-  if(turn=="w") usedSummonW=true; else usedSummonB=true;
-  pendingSummon=null; document.getElementById('summonBox').classList.add('hidden');
-  turn=turn=="w"?"b":"w"; sync(); render();
-}
-function skipSummon(){
-  pendingSummon=null; document.getElementById('summonBox').classList.add('hidden');
-  turn=turn=="w"?"b":"w"; sync(); render();
 }
 function sync(){ if(mode=="online" && conn) conn.send({board,turn,graveW,graveB,usedSummonW,usedSummonB}); }
 function inside(r,c){return r>=0&&r<8&&c>=0&&c<8;}
@@ -169,4 +161,4 @@ function masukRoom(){ let code=document.getElementById('joinCode').value; if(!co
 function startOnlineGame(){ mode="online"; document.getElementById('onlineMenu').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roomInfo').innerText="Mode: ONLINE - Kode: "+(myCode||document.getElementById('joinCode').value)+" | Lu: "+(myColor=="w"?"Putih":"Hitam"); render(); }
 </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                                           </html>
